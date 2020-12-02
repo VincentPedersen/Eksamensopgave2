@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html> 
-    <head> 
+<head> 
         <title>Eksamensopgave</title>
-        <script type="text/javascript" src="../HardCode/createNewUser.js"></script>
+
     </head>
-    <body onload="updateVariables()"> 
+    <body onload=""> 
         
-            <form>
-                <label for="fname">Username</label> <br>
-                <input type="text" id="username" name="Username" placeholder="Your username.."> <br>
+            <form onsubmit="createNewUser()">
+                <label for="username">Username</label> <br>
+                <input type="text" id="username" value = "" name="Username" placeholder="Your username.."> <br>
                 <label for="lname">Password</label> <br>
                 <input type="text" id="Password" name="Password" placeholder="Your Password.."> <br>
                 <label for="gender">gender</label> <br>
@@ -21,8 +19,8 @@
                 <input type="text" id="prefferedSex" name="prefferedSex" placeholder="Your prefferedSex.."> <br>
                 <label for="interests">interests</label> <br>
                 <input type="text" id="interests" name="interests" placeholder="Your interests.."> <br>
-                <input type="submit" id="submit" value="submit" onclick="createNewUser()"><br>
+                <input type="submit" id="submit" value="submit" onclick=""><br>
               </form>
+              <p id="potato">asjdasd</p>
+              <script type ="text/javascript" src="/js/signupController.js"></script>
     </body>
-    
-</html>
