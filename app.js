@@ -22,9 +22,14 @@ router.get('/',function(req,res){
 });
 */
 app.get('/',(req,res,next)=>{
+    res.render('welcome')
+})
+
+app.get('/signup',(req,res,next)=>{
     res.render('signup')
 })
 app.post('/signup',signupController)
+
 
 app.engine('hbs',exphbs({
     defaultLayout:'main',
