@@ -1,0 +1,11 @@
+{
+  "table": [
+    {
+      "username": "BOB",
+      "password": "Hello",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    }
+  ]
+}
