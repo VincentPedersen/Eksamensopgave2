@@ -13,6 +13,7 @@ app.use(express.urlencoded({extended:false}))
 
 //controller require 
 const signupController = require('./public/js/signupController')
+const loginController = require('./public/js/loginController')
 
 app.use(express.static(path.join(__dirname, 'public')));
 /*
@@ -30,6 +31,10 @@ app.get('/signup',(req,res,next)=>{
 })
 app.post('/signup',signupController)
 
+app.get('/login',(req,res,next)=>{
+    res.render('login')
+})
+app.post('/login',loginController)
 
 app.engine('hbs',exphbs({
     defaultLayout:'main',

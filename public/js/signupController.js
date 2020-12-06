@@ -1,8 +1,27 @@
 var fs = require('fs');
-const user = [];
+var user = {
+    table:[]
+};
+
+
 
 function createNewUser(req,res) {
-user.push({
+    try {
+//reads whats currently in the json file and makes it into a js object and pushes it to the empty array
+let data = fs.readFileSync('newUser.json',"utf8");
+if (data!==undefined||data.length>0){
+user = JSON.parse(data);
+
+}
+
+if (data==undefined) throw "the file is empty"
+    } catch (err) {
+        console.log(err)
+    }
+
+
+//pushes the newly created users data into the array
+user.table.push({
     username: req.body.username,
     password: req.body.password,
     gender:req.body.gender,
@@ -12,11 +31,15 @@ user.push({
     interests:req.body.interests
 })
 
-fs.appendFile('newUser.json',JSON.stringify(user),function(err){
+//overwrites the json file with the user array data ---null,2 makes it so that its in multiple lines 
+fs.writeFile('newUser.json',JSON.stringify(user,null,2),function(err){
     if (err) throw err; 
     console.log('saved!');
 })
-console.log(user)
+
+//redirects to the login page after submit - will need some validation so not all submit clicks go to login
+res.redirect("/login")
 }
+
 
 module.exports = createNewUser; 
