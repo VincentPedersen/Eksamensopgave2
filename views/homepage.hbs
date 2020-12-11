@@ -1,9 +1,34 @@
 <head>
-    <title>Homepage</title>
+    <title>User Page</title>
 </head>
 
 <body>
-    <h1>{{user.table[0].username}}</h1>
+    
+    <h1>Welcome {{name}}</h1> <br> 
+    <p>Your password is {{password}}</p> <br>
+    <p>Your gender is {{gender}}</p> <br>
+    <p>Your nationality is {{nationality}}</p> <br>
+    <p>Your location is {{location}}</p> <br>
+    <p>Your preffered sex is {{prefferedSex}}</p> <br>
+    <p>Your interests are {{interests}}</p> <br>
 
-   
+    <a href="/editUser">Edit User</a> <br>
+
+    <form action='/logOut' method='POST'>
+    <input type="submit" id="submit" value="Log out">
+    </form>
+
+    <form action='/findYourLove' method='POST'>
+    <input type="submit" id="submit" value="Find your Love">
+    </form>
+    
+
+<!-- Could not make it work with a button, so made it as a form instead...should work equally as well as with a button...however with a button it would probably just be one line of code --> 
+    <form action='/deleteUser' method='POST'>
+    <input type="submit" id="submit" value="Delete User" onclick="">
+     </form> 
+
+    <form action='/matches' method='POST'>
+    <input type="submit" id="submit" value="My matches">
+    </form>
 </body>

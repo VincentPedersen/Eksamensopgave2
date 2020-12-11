@@ -1,18 +1,23 @@
 {
-  "name": "eksamensopgave2",
+  "name": "eksamensopgave",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "alert": "^5.0.6",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.2.0",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
   }
 }
