@@ -1,0 +1,41 @@
+<head>
+    <title>Edit user</title>
+</head>
+
+<body>
+    <form action='/updateUser' method='POST'>
+                <label for="updateUsername">Username</label> <br> 
+                <input type="text" id="updateUsername" name="updateUsername" placeholder={{name}}> <br> <br>
+                <label for="updatePassword">Password</label> <br>
+                <input type="text" id="updatePassword" name="updatePassword" placeholder={{password}}> <br> <br>
+                <label for="updateGender">Gender</label> <br>
+                <label for="currentGender">Your current gender is:{{gender}}</label> <br> 
+                Male<input type="radio" id="updateGender" name="updateGender" value="Male">
+                Female<input type="radio" id="updateGender" name="updateGender" value="Female"> <br> <br>
+                <label for="updateNationality">Nationality</label> <br>
+                <input type="text" id="updateNationality" name="updateNationality" placeholder={{nationality}}> <br> <br>
+                <label for="updateLocation">Location</label> <br>
+                <input type="text" id="updateLocation" name="updateLocation" placeholder={{location}}> <br> <br>
+                <label for="updatePrefferedSex">Preffered sex</label> <br>
+                <label for="currentPrefferedSex">Your currently preffered Sex is: {{prefferedSex}}</label> <br>
+                Male<input type="radio" id="updatePrefferedSex" name="updatePrefferedSex" value="Male"> 
+                Female<input type="radio" id"updatePrefferedSex" name="updatePrefferedSex" value="Female"> <br> <br>
+                <label for="updateInterests">Interests</label> <br>
+                <input type="text" id="updateInterests" name="updateInterests" placeholder={{interests}}> <br> <br>
+                <input type="submit" id="submit" value="submit" onclick=""><br>
+              </form>
+   
+
+    
+    
+    
+    
+    <a href="/homepage">Back</a>
+
+   
+
+<!-- Could not make it work with a button, so made it as a form instead...should work equally as well as with a button...however with a button it would probably just be one line of code --> 
+    <form action='/deleteUser' method='POST'>
+    <input type="submit" id="submit" value="Delete User" onclick="">
+     </form> 
+</body>

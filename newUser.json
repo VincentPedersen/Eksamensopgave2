@@ -1,0 +1,103 @@
+{
+  "table": [
+    {
+      "username": "Marie",
+      "password": "Disco",
+      "gender": "Female",
+      "nationality": "Danish",
+      "location": "Kokkedal",
+      "prefferedSex": "Male",
+      "interests": "Dancing"
+    },
+    {
+      "username": "Gertrud",
+      "password": "Pingu",
+      "gender": "Female",
+      "nationality": "Finnish",
+      "location": "Helsinki",
+      "prefferedSex": "Male",
+      "interests": "Ice Hockey"
+    },
+    {
+      "username": "ANNA",
+      "password": "Disc",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "Mark",
+      "password": "Disc",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "Cathrine",
+      "password": "Disc",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "potato",
+      "password": "Disco",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "BOBBBYY",
+      "password": "Disc",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "IB",
+      "password": "",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "FUJI",
+      "password": "",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "YEEEEHAAAA",
+      "password": "",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "kitkat",
+      "password": "1234",
+      "gender": "Male",
+      "nationality": "Danish",
+      "location": "Kokkedal",
+      "prefferedSex": "Male",
+      "interests": "skiing"
+    },
+    {
+      "username": "GILBERT",
+      "password": "",
+      "nationality": "",
+      "location": "",
+      "interests": ""
+    },
+    {
+      "username": "Vincent",
+      "password": "1234",
+      "gender": "Male",
+      "nationality": "Danish",
+      "location": "Kokkedal",
+      "prefferedSex": "Female",
+      "interests": "Disc golf"
+    }
+  ]
+}

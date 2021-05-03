@@ -1,8 +1,6 @@
-//Classes of models used for the Users (important for the Hardcode)
-//imports the model for users
-const Users = require('../Model/Users')
-//imports the model for interests
-const Interest = require('../Model/Interest')
+//this isn't being used at the moment
+//I am however saving this file to be able to implement it in the future.
+
 
 class User {
     constructor (username,password,gender,nationality,location,prefferedSex,interests){
@@ -30,12 +28,7 @@ class FreeUser extends User {
         super(username,password,gender,nationality,location,prefferedSex,interests);
     }
 
-    //Could include some function that limits the amount of likes/matches
-    like_limit(likes){
-        
-        
-
-    }
+    
 
 }
 

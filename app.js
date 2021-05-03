@@ -5,14 +5,31 @@ const router = express.Router();
 const exphbs = require('express-handlebars');
 const bodyparser = require('body-parser');
 
-app.use(bodyparser.urlencoded({extended:false}))
-app.use(express.urlencoded({extended:false}))
+app.use(bodyparser.urlencoded({extended:false}));
+app.use(express.urlencoded({extended:false}));
 
 
 
 
 //controller require 
-const signupController = require('./public/js/signupController')
+const signupController = require('./public/js/signupController');
+const loginController = require('./public/js/loginController');
+const stayLoggedinController = require('./public/js/stayLoggedinController');
+const logOutController = require('./public/js/logOutController');
+const deleteUserController = require('./public/js/deleteUserController');
+const updateUserController = require('./public/js/updateUserController');
+const loadUserController = require('./public/js/loadUserController')
+const likeController = require('./public/js/likeController');
+const dislikeController = require('./public/js/dislikeController');
+const matchController = require('./public/js/matchController');
+const nextMatchController = require('./public/js/nextMatchController');
+const previousMatchController = require('./public/js/previousMatchController');
+const deleteMatchController = require('./public/js/deleteMatchController');
+const stayLoggedin = require('./public/js/stayLoggedinController');
+
+
+
+//const namespace =require('./namespace.js')
 
 app.use(express.static(path.join(__dirname, 'public')));
 /*
@@ -22,15 +39,94 @@ router.get('/',function(req,res){
 });
 */
 app.get('/',(req,res,next)=>{
-    res.render('signup')
-})
-app.post('/signup',signupController)
+    res.render('welcome',{
+        
+    });
+});
+
+app.post('/stayLogin',stayLoggedinController);
+
+
+app.get('/signup',(req,res,next)=>{
+    res.render('signup');
+});
+app.post('/signup',signupController);
+
+app.get('/login',(req,res,next)=>{
+    res.render('login');
+});
+app.post('/login',loginController);
+
+
+app.get('/homepage',(req,res,next)=>{
+    res.render('homepage',{
+        name: displayName,
+        password: displayPassword,
+        gender: displayGender,
+        nationality: displayNationality,
+        location: displayLocation,
+        prefferedSex: displayPrefferedSex,
+        interests: displayInterests
+    });
+});
+app.post('/deleteUser',deleteUserController);
+
+app.get('/editUser',(req,res,next)=>{
+    res.render('editUser',{
+        name: displayName,
+        password: displayPassword,
+        gender: displayGender,
+        nationality: displayNationality,
+        location: displayLocation,
+        prefferedSex: displayPrefferedSex,
+        interests: displayInterests
+    });
+});
+app.post('/updateUser',updateUserController);
+app.post('/logOut',logOutController);
+
+app.get('/like',(req,res,next)=>{
+    res.render('like',{
+        name: userProfileUsername,
+        password: userProfilePassword,
+        gender: userProfileGender,
+        nationality: userProfileNationality,
+        location: userProfileLocation,
+        prefferedSex: userProfilePrefferedSex,
+        interests: userProfileInterests
+    });
+});
+
+app.post('/findYourLove',loadUserController);
+app.post('/like',likeController);
+app.post('/dislike',dislikeController);
+
+app.get('/matches',(req,res,next)=>{
+    res.render('matches',{
+        name: matchProfileUsername,
+        password: matchProfilePassword,
+        gender: matchProfileGender,
+        nationality: matchProfileNationality,
+        location: matchProfileLocation,
+        prefferedSex: matchProfilePrefferedSex,
+        interests: matchProfileInterests, 
+        visibilityNext: nextButtonVisibility,
+        visibilityPrevious: previousButtonVisibility
+    });
+});
+
+app.post('/matches',matchController);
+app.post('/next',nextMatchController);
+app.post('/previous',previousMatchController);
+app.post('/deleteMatch',deleteMatchController)
+
+
 
 app.engine('hbs',exphbs({
     defaultLayout:'main',
     extname:'.hbs'
-}))
-app.set('view engine','.hbs')
+}));
+app.set('view engine','.hbs');
 
 
 //add the router
