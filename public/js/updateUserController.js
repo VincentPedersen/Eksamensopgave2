@@ -88,7 +88,7 @@ function updateUser (req,res){
         }
     }
     
-
+    //there was a bug where it complained that username2 was undefined...didn't rly fix it, just deleted dislikes.json and likes.json and it somehow worked again. maybe something with big json files? should def be looked at more
     //makes sure the already made likes also update if the person updates their username
     for (var j=0;j<likes.table.length;j++){
         if(displayName===likes.table[j].username){
@@ -107,6 +107,7 @@ function updateUser (req,res){
             dislikes.table[j].username2 = user.table[i].username;
         }
     }
+    
     
 if(counter<=1){
     displayName = user.table[i].username;
