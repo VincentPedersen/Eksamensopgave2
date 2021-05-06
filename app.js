@@ -13,6 +13,8 @@ app.use(express.urlencoded({extended:false}));
 
 //controller require 
 const signupController = require('./public/js/signupController');
+const forgotpasswordController = require('./public/js/forgotPasswordController');
+const newpasswordController = require('./public/js/newpasswordcontroller');
 const loginController = require('./public/js/loginController');
 const stayLoggedinController = require('./public/js/stayLoggedinController');
 const logOutController = require('./public/js/logOutController');
@@ -26,6 +28,8 @@ const nextMatchController = require('./public/js/nextMatchController');
 const previousMatchController = require('./public/js/previousMatchController');
 const deleteMatchController = require('./public/js/deleteMatchController');
 const stayLoggedin = require('./public/js/stayLoggedinController');
+const axios = require('axios').default;
+const { response } = require('express');
 
 
 
@@ -52,6 +56,27 @@ app.get('/signup',(req,res,next)=>{
 });
 app.post('/signup',signupController);
 
+app.get('/forgotpassword',(req,res,next)=>{
+    res.render('forgotpassword')
+})
+app.post('/forgotpass',forgotpasswordController);
+
+app.get('/newpassword',(req,res,next)=>{
+    res.render('newpassword')
+})
+app.post('/newpass',newpasswordController);
+/*
+app.post('/signup',function(req,res) {
+        axios.post('http://localhost:7071/api/SignUp',
+            {email:req.body.email,first_name:req.body.first_name,last_name:req.body.last_name,age:req.body.age,location:req.body.location,gender:req.body.gender},
+            function (error, response,body){
+                if(!error && response.statusCode ==200){
+                    console.log(body);
+                }
+            }
+        )
+});
+*/
 app.get('/login',(req,res,next)=>{
     res.render('login');
 });

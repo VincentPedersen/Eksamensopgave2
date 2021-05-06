@@ -1,16 +1,19 @@
-//this isn't being used at the moment
-//I am however saving this file to be able to implement it in the future.
+const bcrypt = require('bcrypt')
+const saltRounds = 10;
 
 
 class User {
-    constructor (username,password,gender,nationality,location,prefferedSex,interests){
-        this.username = username; 
+    constructor (email,password,first_name,last_name,age,location,gender){
+        this.email = email; 
         this.password = password; 
+        this.first_name = first_name;
+        this.last_name = last_name; 
+        this.age = age; 
+        this.location = location;
         this.gender = gender; 
-        this.nationality = nationality; 
-        this.location = location; 
-        this. prefferedSex = prefferedSex; 
-        this.interests = interests; 
+        //this.nationality = nationality;  
+        //this. prefferedSex = prefferedSex; 
+        //this.interests = interests; 
         //this.match = match;
         //this.image = image; 
     }
@@ -41,5 +44,5 @@ var Array = [PaymentUser,FreeUser];
 
 //Allows the array to be found in the other files 
 
-module.exports = Array; 
+module.exports = User; 
  
