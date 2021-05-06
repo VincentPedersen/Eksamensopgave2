@@ -5,15 +5,22 @@
     <body> 
         
             <form action='/signup' method='POST'>
-                <label for="username">Username</label> <br>
-                <input type="text" id="username" name="username" placeholder="Your username.." required> <br>
+                <label for="email">Email</label> <br>
+                <input type="text" id="email" name="email" placeholder="Your email.." required> <br>
                 <label for="lname">Password</label> <br>
                 <input type="text" id="password" name="password" placeholder="Your Password.." required> <br>
+                <label for="first_name">First Name</label> <br>
+                <input type="text" id="first_name" name="first_name" placeholder="Your first name..." required> <br>
+                <label for="last_name">Last Name</label> <br> 
+                <input type="text" id="last_name" name="last_name" placeholder="Your last name..."required> <br>
+                <label for="age">Age</label> <br>
+                <input type="text" id="age" name="age" placeholder="Your age..."required> <br>
                 <label for="gender">gender</label> <br>
-                Male<input type="radio" id="gender" name="gender" value="Male">
-                Female<input type="radio" id="gender" name="gender" value="Female"> <br> 
-                <label for="nationality">nationality</label> <br>
-                <input type="text" id="nationality" name="nationality" placeholder="Your nationality.."> <br>
+                <!--<input type="text" id="gender" name="gender" placeholder="Your gender..."required> <br> -->
+                Male<input type="radio" id="gender" name="gender" value="1">
+                Female<input type="radio" id="gender" name="gender" value="2">
+                Other<input type="radio" id="gender" name="gender" value="3"> <br>
+              
                 <label for="location">location</label> <br>
                 <input type="text" id="location" name="location" placeholder="Your location.."> <br>
                 <label for="prefferedSex">prefferedSex</label> <br>
@@ -24,5 +31,7 @@
                 <input type="submit" id="submit" value="submit" onclick=""><br>
               </form>
 
+            
+              <a href="/forgotpassword">Forgot Password?</a>
               <a href="/login">login</a>
     </body>
