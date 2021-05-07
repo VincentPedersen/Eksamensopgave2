@@ -8,6 +8,30 @@ const bodyparser = require('body-parser');
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(express.urlencoded({extended:false}));
 
+//functions...This is def not the best way to do this, but couldn't really come up with another one
+//Maybe I will come up with another way to fix this, but so far this is the best option
+//makes login kinda slow as well, but nothing too too bad
+
+async function getVariables(req,res,email){
+    var user = await renderUserProfile(req,res,email)
+    
+    app.get('/homepage',(req,res,next)=>{
+        console.log(renderUserProfile)
+        res.render('homepage',{
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            age: user.age,
+            location: user.location,
+            gender: user.gender
+            /*
+            nationality: displayNationality,
+            prefferedSex: displayPrefferedSex,
+            interests: displayInterests*/
+        });
+    });
+}
+module.exports = getVariables;
 
 
 
@@ -27,6 +51,7 @@ const matchController = require('./public/js/matchController');
 const nextMatchController = require('./public/js/nextMatchController');
 const previousMatchController = require('./public/js/previousMatchController');
 const deleteMatchController = require('./public/js/deleteMatchController');
+const renderUserProfile = require('./public/js/renderUserProfileController')
 const stayLoggedin = require('./public/js/stayLoggedinController');
 const axios = require('axios').default;
 const { response } = require('express');
@@ -65,35 +90,12 @@ app.get('/newpassword',(req,res,next)=>{
     res.render('newpassword')
 })
 app.post('/newpass',newpasswordController);
-/*
-app.post('/signup',function(req,res) {
-        axios.post('http://localhost:7071/api/SignUp',
-            {email:req.body.email,first_name:req.body.first_name,last_name:req.body.last_name,age:req.body.age,location:req.body.location,gender:req.body.gender},
-            function (error, response,body){
-                if(!error && response.statusCode ==200){
-                    console.log(body);
-                }
-            }
-        )
-});
-*/
+
 app.get('/login',(req,res,next)=>{
     res.render('login');
 });
 app.post('/login',loginController);
 
-
-app.get('/homepage',(req,res,next)=>{
-    res.render('homepage',{
-        name: displayName,
-        password: displayPassword,
-        gender: displayGender,
-        nationality: displayNationality,
-        location: displayLocation,
-        prefferedSex: displayPrefferedSex,
-        interests: displayInterests
-    });
-});
 app.post('/deleteUser',deleteUserController);
 
 app.get('/editUser',(req,res,next)=>{

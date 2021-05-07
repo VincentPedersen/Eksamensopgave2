@@ -1,74 +1,49 @@
 //var bodyParser = require('body-parser')
 var fs = require('fs');
 var alert = require('alert');
-
-var user = {
-    table:[]
-};
-
-var likes = {
-    table:[]
-};
-var counter = 0;
+var functionPost = require('../../Azure functions/FunctionPOST');
+var app = require('../../app')
+const bcrypt = require('bcrypt');
+const { callbackPromise } = require('nodemailer/lib/shared');
+const { response } = require('express');
+const saltRounds = 10;
 
 
 
-function login (req,res){
-    try {
 
-        var jsonUsers = fs.readFileSync('newUser.json',"utf8")
-        //console.log(jsonUsers)
-        if (jsonUsers!==undefined||jsonUsers.length>0){
-        user = JSON.parse(jsonUsers);
-        }
-        if (user==undefined) throw "file is empty"
-        } catch (err){
-            console.log(err)
-        }
+//Kind of a async function hell...because both functionPost.login and bcrypt.compare are either async functions or have async functions in them 
+//this meant that it was super hard to assign variables to their return values and not just have them return undefined
+async function login (req,res){
 
-        try {
 
-            var jsonlikes = fs.readFileSync('likes.json',"utf8")
-            //console.log(jsonUsers)
-            if (jsonlikes!==undefined||jsonlikes.length>0){
-            likes = JSON.parse(jsonlikes);
-            }
-            if (likes==undefined) throw "file is empty"
-            } catch (err){
-                console.log(err)
-            }
+    var email = req.body.email; 
+    var password = req.body.password; 
 
-var loginUsername = req.body.loginusername
-var loginPassword = req.body.loginpassword
-for (var i=0;i<user.table.length;i++){
-if (loginUsername===user.table[i].username&&loginPassword===user.table[i].password){
-    counter++
-    break;
-} 
-
-}
-//makes sure the variable isn't being assigned if the for loop didn't find any matches of username and password
-if (counter!==0){
-displayName = user.table[i].username;
-displayPassword = user.table[i].password;
-displayGender = user.table[i].gender;
-displayNationality = user.table[i].nationality;
-displayLocation = user.table[i].location;
-displayPrefferedSex = user.table[i].prefferedSex;
-displayInterests = user.table[i].interests;
+    //gets the hashedpassword that is stored with that email.
+    var hashedpassword = await functionPost.login(email);
+    console.log(hashedpassword)
+    console.log(password)
+    //compares the hashedpassword with the userwritten one
+        bcrypt.compare(password,hashedpassword,(err,response)=>{
+            console.log('Compared result',response,hashedpassword)
+            failOrnot(req,res,response,email)
+            return res 
+            
+        })
+    
 }
 
-if (counter>0){
- res.redirect("/homepage")
-}else {
-    res.redirect("/login")
-    alert("Wrong username or password!");
+function failOrnot(req,res,response,email){
+    console.log(response)
+    
+    if (response==true){
+        app(req,res,email);
+    } else {
+         res.redirect("/login");
+         alert("Wrong username or password!");
+    }
+    
 }
-
-counter = 0; 
-}
-
-
 
 module.exports = login; 
 

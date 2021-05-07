@@ -31,8 +31,44 @@ function newPassword(email,hash){
             }
         )
 }
+
+function login(email){
+    return axios.get('http://localhost:7071/api/Login',{
+                params:{
+                email:email
+            }
+        })
+        .then(function(response){
+            console.log("Success!")
+            return response.data
+            
+        })
+        .catch(function(error){
+            console.log(error)
+        })
+}
+
+function renderUserProfile(email,callback){
+    return axios.get('http://localhost:7071/api/RenderUserProfile',{
+                params:{
+                email:email
+            }
+        })
+        .then(function(response){
+            console.log("Success!")
+            return response.data
+            
+        })
+        .catch(function(error){
+            console.log(error)
+        })
+}
+
+
 module.exports = {
     signUp,
     forgotPassword,
-    newPassword
+    newPassword,
+    login,
+    renderUserProfile
 }
