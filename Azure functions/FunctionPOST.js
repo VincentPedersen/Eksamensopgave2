@@ -64,11 +64,25 @@ function renderUserProfile(email,callback){
         })
 }
 
+function deleteUser(email){
+    axios.post('http://localhost:7071/api/DeleteUser',
+            {email:email},
+            function (error, response,body){
+                if(!error && response.statusCode ==200){
+                    console.log(body);
+                }
+            }
+        )
+}
+
+
+
 
 module.exports = {
     signUp,
     forgotPassword,
     newPassword,
     login,
-    renderUserProfile
+    renderUserProfile,
+    deleteUser
 }
