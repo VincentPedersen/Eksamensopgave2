@@ -30,6 +30,8 @@ node app.js
 
 Azure functions startes ved at "run without debugging" 
 
+Kører på LocalHost:3000
+
 
 
 
