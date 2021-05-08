@@ -75,6 +75,17 @@ function deleteUser(email){
         )
 }
 
+function editUser(newUser,email){
+    axios.post('http://localhost:7071/api/EditUser',
+            {newemail:newUser.email,first_name:newUser.first_name,last_name:newUser.last_name,age:newUser.age,location:newUser.location,gender:newUser.gender,email:email},
+            function (error, response,body){
+                if(!error && response.statusCode ==200){
+                    console.log(body);
+                }
+            }
+        )
+}
+
 
 
 
@@ -84,5 +95,6 @@ module.exports = {
     newPassword,
     login,
     renderUserProfile,
-    deleteUser
+    deleteUser,
+    editUser
 }

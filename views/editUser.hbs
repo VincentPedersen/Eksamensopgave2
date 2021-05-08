@@ -4,26 +4,32 @@
 
 <body>
     <form action='/updateUser' method='POST'>
-                <label for="updateUsername">Username</label> <br> 
-                <input type="text" id="updateUsername" name="updateUsername" placeholder={{name}}> <br> <br>
-                <label for="updatePassword">Password</label> <br>
-                <input type="text" id="updatePassword" name="updatePassword" placeholder={{password}}> <br> <br>
+                <label for="updateEmail">Email</label> <br> 
+                <input type="text" id="newEmail" name="newEmail" placeholder={{email}}> <br> <br>
+                <label for="updateFirst_name">First name</label> <br>
+                <input type="text" id="newFirst_name" name="newFirst_name" placeholder={{first_name}}> <br> <br>
+                <label for="updateLast_name">Last name</label> <br> 
+                <input type="text" id="newLast_name" name="newLast_name" placeholder={{last_name}}> <br> <br> 
+                <label for="updateAge">Age</label> <br> 
+                <input type="text" id="newAge" name="newAge" placeholder={{age}}> <br> <br> 
                 <label for="updateGender">Gender</label> <br>
                 <label for="currentGender">Your current gender is:{{gender}}</label> <br> 
-                Male<input type="radio" id="updateGender" name="updateGender" value="Male">
-                Female<input type="radio" id="updateGender" name="updateGender" value="Female"> <br> <br>
-                <label for="updateNationality">Nationality</label> <br>
-                <input type="text" id="updateNationality" name="updateNationality" placeholder={{nationality}}> <br> <br>
+                Male<input type="radio" id="newGender" name="newGender" value=1>
+                Female<input type="radio" id="newGender" name="newGender" value=2> 
+                Other <input type="radio" id="newGender" name="newGender" value=3><br> <br>
                 <label for="updateLocation">Location</label> <br>
-                <input type="text" id="updateLocation" name="updateLocation" placeholder={{location}}> <br> <br>
+                <input type="text" id="newLocation" name="newLocation" placeholder={{location}}> <br> <br>
+                <!--
                 <label for="updatePrefferedSex">Preffered sex</label> <br>
-                <label for="currentPrefferedSex">Your currently preffered Sex is: {{prefferedSex}}</label> <br>
+                <label for="currentPrefferedSex">Your currently preffered Sex is: {{prefferedSex}}</label> <br> 
                 Male<input type="radio" id="updatePrefferedSex" name="updatePrefferedSex" value="Male"> 
                 Female<input type="radio" id"updatePrefferedSex" name="updatePrefferedSex" value="Female"> <br> <br>
                 <label for="updateInterests">Interests</label> <br>
-                <input type="text" id="updateInterests" name="updateInterests" placeholder={{interests}}> <br> <br>
+                <input type="text" id="updateInterests" name="updateInterests" placeholder={{interests}}> <br> <br>-->
                 <input type="submit" id="submit" value="submit" onclick=""><br>
               </form>
+              
+              <a href="/newPassword">Change password</a> <br>
    
 
     

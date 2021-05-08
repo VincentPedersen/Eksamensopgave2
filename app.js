@@ -7,16 +7,27 @@ const bodyparser = require('body-parser');
 
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(express.urlencoded({extended:false}));
+app.disable('view cache');
+app.set('env development')
 
 //functions...This is def not the best way to do this, but couldn't really come up with another one
 //Maybe I will come up with another way to fix this, but so far this is the best option
-//makes login kinda slow as well, but nothing too too bad
-
-async function getVariables(req,res,email){
-    var user = await renderUserProfile(req,res,email)
-    
+//makes login kinda slow as well, but nothing too too bad 
+async function getVariables(req,res,email/*,newUser,editid*/){
+    var counter = 1;
+    /*if (editid==true){
+        var user = newUser;
+    } else {*/
+        var email = localStorage.getItem('email');
+        //was not working at all when using var or let...so had to just define global variable, that worked for some reason...Maybe something with running it multiple times???
+        user = await renderUserProfile(req,res,email,counter)
+    //}
+    console.log(user)
     app.get('/homepage',(req,res,next)=>{
-        console.log(renderUserProfile)
+        console.log(user.first_name)
+       res.setHeader("Cache-Control","no-cache, no-store, must-revalidate");
+       res.setHeader("Pragma","no-cache")
+       res.setHeader("Expires","0");
         res.render('homepage',{
             email: user.email,
             first_name: user.first_name,
@@ -30,8 +41,33 @@ async function getVariables(req,res,email){
             interests: displayInterests*/
         });
     });
+
 }
-module.exports = getVariables;
+
+async function getEditUser(req,res,email){
+    var counter = 2; 
+    user = await renderUserProfile(req,res,email,counter)
+
+    app.get('/editUser',(req,res,next)=>{
+        res.render('editUser',{
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            age: user.age,
+            location: user.location,
+            gender: user.gender
+        });
+    });
+
+}
+
+
+
+
+module.exports = {
+    getVariables,
+    getEditUser,
+}
 
 
 
@@ -43,7 +79,7 @@ const loginController = require('./public/js/loginController');
 const stayLoggedinController = require('./public/js/stayLoggedinController');
 const logOutController = require('./public/js/logOutController');
 const deleteUserController = require('./public/js/deleteUserController');
-const updateUserController = require('./public/js/updateUserController');
+const editUserController = require('./public/js/editUserController');
 const loadUserController = require('./public/js/loadUserController')
 const likeController = require('./public/js/likeController');
 const dislikeController = require('./public/js/dislikeController');
@@ -73,6 +109,13 @@ app.get('/',(req,res,next)=>{
     });
 });
 
+app.get('/savedChanges',(req,res,next)=>{
+    res.render('savedChanges',{
+
+    });
+});
+
+app.post('/homepage',getVariables);
 app.post('/stayLogin',stayLoggedinController);
 
 
@@ -98,18 +141,8 @@ app.post('/login',loginController);
 
 app.post('/deleteUser',deleteUserController);
 
-app.get('/editUser',(req,res,next)=>{
-    res.render('editUser',{
-        name: displayName,
-        password: displayPassword,
-        gender: displayGender,
-        nationality: displayNationality,
-        location: displayLocation,
-        prefferedSex: displayPrefferedSex,
-        interests: displayInterests
-    });
-});
-app.post('/updateUser',updateUserController);
+app.post('/editUser',editUserController.editUser);
+app.post('/updateUser',editUserController.updateUser);
 app.post('/logOut',logOutController);
 
 app.get('/like',(req,res,next)=>{
@@ -147,8 +180,12 @@ app.post('/next',nextMatchController);
 app.post('/previous',previousMatchController);
 app.post('/deleteMatch',deleteMatchController)
 
-
-
+/*
+app.views({
+    path: views,
+    isCached: false
+});
+*/
 app.engine('hbs',exphbs({
     defaultLayout:'main',
     extname:'.hbs'
