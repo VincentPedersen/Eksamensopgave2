@@ -3,7 +3,6 @@ var User = require('../../Model/Users');
 
 async function renderUserProfile (email){
     var result = await functionPost.renderUserProfile(email);
-    console.log(result);
     return result;
 }
 
@@ -17,15 +16,22 @@ async function assignValues(email){
     var gender = result[5];
 
     var user = new User(email,'',first_name,last_name,age,Location,gender)
-    console.log(user.email)
     return user
 }
 
 //most definetely not the best way to do this!!!
-async function redirect(req,res,email){
+async function redirect(req,res,email,counter){
     var user = await assignValues(email);
-    console.log(user)
-    res.redirect("/homepage");
+        if (counter===1){
+            res.redirect("/homepage");
+        } else if (counter===2){
+            res.redirect("/editUser");
+        } else {
+            console.log("Oops something went wrong")
+        }
+    
+    
+    
     return user
 }
 

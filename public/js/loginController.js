@@ -26,11 +26,9 @@ async function login (req,res){
 
     //gets the hashedpassword that is stored with that email.
     var hashedpassword = await functionPost.login(email);
-    console.log(hashedpassword)
-    console.log(password)
     //compares the hashedpassword with the userwritten one
         bcrypt.compare(password,hashedpassword,(err,response)=>{
-            console.log('Compared result',response,hashedpassword)
+            //console.log('Compared result',response,hashedpassword)
             failOrnot(req,res,response,email)
             return res 
             
@@ -39,10 +37,10 @@ async function login (req,res){
 }
 
 function failOrnot(req,res,response,email){
-    console.log(response)
+    
     
     if (response==true){
-        app(req,res,email);
+        app.getVariables(req,res,email);
     } else {
          res.redirect("/login");
          alert("Wrong username or password!");

@@ -1,6 +1,9 @@
 <head>
     <title>User Page</title>
 </head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 
 <body>
     
@@ -14,7 +17,10 @@
     <p>Your preffered sex is {{prefferedSex}}</p> <br>
     <p>Your interests are {{interests}}</p> <br>-->
 
-    <a href="/editUser">Edit User</a> <br>
+    
+    <form action='/editUser' method='POST'>
+    <input type="submit" id="submit" value="Edit User">
+    </form>
 
     <form action='/logOut' method='POST'>
     <input type="submit" id="submit" value="Log out">
