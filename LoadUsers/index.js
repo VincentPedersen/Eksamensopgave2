@@ -3,7 +3,7 @@ var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
 const config = require('../Database/config.json');
 
-const executeSQL = (context,email) => {
+const executeSQL = (context,email,minAge,maxAge) => {
     var result = [];
 
     //Create connection object
@@ -18,6 +18,24 @@ const executeSQL = (context,email) => {
                                 WHERE _User.email = '${email}' 
                                 ORDER BY _User.id ASC
 
+                                DECLARE @user_gender varchar(32)
+                                SELECT @user_gender = _Gender.name
+                                FROM [dating_app].[Gender] AS _Gender
+                                JOIN [dating_app].[User] AS _User 
+                                ON _User.Gender_id = _Gender.id
+                                WHERE _User.email = '${email}' 
+
+                                SELECT name
+                                INTO #UserPrefSexTable
+                                FROM [dating_app].[Gender] AS _Gender
+                                JOIN [dating_app].[Interested_in_gender] AS _InterestedIn
+                                ON _Gender.id = _InterestedIn.Gender_id
+                                JOIN [dating_app].[User] AS _User
+                                ON _InterestedIn.User_id = _User.id
+                                WHERE _User.email = '${email}'
+
+     
+
                                 DECLARE @smt_id INT
                                 SELECT @smt_id = (SELECT top(1) _User.id FROM [dating_app].[User] AS _User JOIN [dating_app].[Gender] AS _Gender ON _User.Gender_id = _Gender.id
                                 JOIN [dating_app].[Interested_in_gender] AS _InterestedIn
@@ -30,12 +48,7 @@ const executeSQL = (context,email) => {
                                 ON User_Interest.Interests_id = _Interests.id WHERE _User.id IN (SELECT id FROM [dating_app].[User] EXCEPT SELECT User2_id FROM [dating_app].[Likes] WHERE User_id = @user_id EXCEPT SELECT User2_id FROM [dating_app].[Dislikes] WHERE User_id = @user_id)
                                 AND email != '${email}' ORDER BY _User.id ASC)
 
-                                DECLARE @ps_id INT
-                                SELECT @ps_id = COUNT(_InterestedIn.User_id)
-                                FROM [dating_app].[Interested_in_gender] AS _InterestedIn
-                                WHERE _InterestedIn.User_id = @smt_id;
-
-                                SELECT TOP(@ps_id*3)_User.id,_User.first_name,_User.last_name,_User.age,_User.location,_Gender.name AS Gender,_Gender2.name AS PrefferedSex, _Interests.name AS Interests
+                                SELECT TOP(3)_User.id,_User.first_name,_User.last_name,_User.age,_User.location,_Gender.name AS Gender, _Interests.name AS Interests
                                 FROM [dating_app].[User] AS _User
                                 JOIN [dating_app].[Gender] AS _Gender
                                 ON _User.Gender_id = _Gender.id
@@ -48,7 +61,11 @@ const executeSQL = (context,email) => {
                                 JOIN [dating_app].[Interests] AS _Interests
                                 ON User_Interest.Interests_id = _Interests.id
                                 WHERE _User.id IN (SELECT id FROM [dating_app].[User] EXCEPT SELECT User2_id FROM [dating_app].[Likes] WHERE User_id = @user_id EXCEPT SELECT User2_id FROM [dating_app].[Dislikes] WHERE User_id = @user_id)
-                                AND email != '${email}';`,function(err){
+                                AND _User.email != '${email}'
+                                AND _User.id != 52
+                                AND _Gender2.name = @user_gender
+                                AND _Gender.name IN (SELECT name FROM #UserPrefSexTable)
+                                AND _User.age BETWEEN '${minAge}' AND '${maxAge}'`,function(err){
         if (err) {
             context.log.error(err);
             context.res.status = 500; 
@@ -92,9 +109,11 @@ function loadUsers (context, req) {
     try {
     context.log('JavaScript HTTP trigger function processed a request.');
     const email = (req.query.email || (req.body && req.body.email));
+    const minAge = (req.query.minAge || (req.body && req.body.minAge));
+    const maxAge = (req.query.maxAge || (req.body && req.body.maxAge));
 
 
-    executeSQL(context,email)
+    executeSQL(context,email,minAge,maxAge)
     }
     catch (err){
         console.log(err)

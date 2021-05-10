@@ -86,10 +86,12 @@ function editUser(newUser,email){
         )
 }
 
-function loadUsers(email){
+function loadUsers(email,minAge,maxAge){
     return axios.get('http://localhost:7071/api/LoadUsers',{
                 params:{
-                email:email
+                email:email,
+                minAge:minAge,
+                maxAge:maxAge
             }
         })
         .then(function(response){
@@ -199,6 +201,31 @@ async function getIdFromEmail(email){
         })
 }
 
+async function adminAmountMatches(){
+    return axios.get('http://localhost:7071/api/AmountMatches',{
+        })
+        .then(function(response){
+            console.log("Success!")
+            return response.data
+            
+        })
+        .catch(function(error){
+            console.log(error)
+        })
+}
+
+async function adminAmountUsers(){
+    return axios.get('http://localhost:7071/api/AmountUsers',{
+        })
+        .then(function(response){
+            console.log("Success!")
+            return response.data
+            
+        })
+        .catch(function(error){
+            console.log(error)
+        })
+}
 
 module.exports = {
     signUp,
@@ -215,5 +242,7 @@ module.exports = {
     getMatch,
     getEmailFromId,
     deleteMatch,
-    getIdFromEmail
+    getIdFromEmail,
+    adminAmountMatches,
+    adminAmountUsers
 }

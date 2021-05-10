@@ -24,7 +24,7 @@ function createNewUser(req,res) {
         var interests1 = interestsArray[0];
         var interests2 = interestsArray[1];
         var interests3 = interestsArray[2];
-
+        
         function ValidateEmail(email)
         {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -45,7 +45,7 @@ function createNewUser(req,res) {
     if (validatedemail==false){
         res.redirect("/signUp")
         alert("You have entered an invalid email address")
-    } else {
+    } else { 
         if(interestsArray.length!==3){
             res.redirect("/signUp")
             alert("You need to choose 3 interests")
@@ -74,7 +74,7 @@ function createNewUser(req,res) {
         }
 
 
-    }
+   }
 return user;
 }
 

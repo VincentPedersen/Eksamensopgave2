@@ -15,7 +15,11 @@ const { isNull } = require('util');
 async function updateUser(req,res){
 
     //First have to get the current user data
-    var email = localStorage.getItem('email');
+    if (localStorage.getItem('email')==='Admin'){
+        var email = localStorage.getItem('adminEmailChange');
+    } else {
+        var email = localStorage.getItem('email');
+    }
     var result = await renderUserProfile.renderUserProfile(email);
 
 console.log(result)
@@ -128,6 +132,31 @@ console.log(result)
     
     
     var newEmail = req.body.newEmail; 
+
+    //Validates email so you can't change it to something that you wouldn't be able to sign up with
+    function ValidateEmail(newEmail)
+        {
+            var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if(newEmail.match(mailformat))
+            {
+            console.log("Valid email address!");
+            return true;
+            }
+            else
+            {
+            console.log("You have entered an invalid email address!");
+            return false;
+            }
+        }
+
+    var validatedemail = ValidateEmail(newEmail)
+
+    if (validatedemail==false){
+        if(newEmail!==""){
+            alert("You have entered an invalid email address")
+        }
+        newEmail = email;
+    }
     var newfirstName = req.body.newFirst_name;
     var newlastName = req.body.newLast_name; 
     var newAge = req.body.newAge;
@@ -197,17 +226,16 @@ console.log(result)
     console.log(newUser)
     functionPost.editUser(newUser,email);
     
+    if (localStorage.getItem('email')==='Admin'){
+        res.redirect("/Admin")
+        alert("You have successfully edited a user!")
+    } else {
+        res.redirect("/savedChanges")
+        global.localStorage.setItem('email',newUser.email);
+    }
 
-    global.localStorage.setItem('email',newUser.email);
+    
         
-    
-   res.redirect("/savedChanges")
-
-    
-    
-    
-   
-
     return newUser
 
 }

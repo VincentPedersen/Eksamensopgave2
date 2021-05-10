@@ -1,0 +1,38 @@
+<head>
+    <title>User Page</title>
+</head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<body>
+
+    <h1>You are currently logged in as admin</h1>
+    <br>
+    <br>
+    <a href="/adminEditUser">Edit a User</a>
+
+
+    <br>
+
+    <a href="/adminDeleteUser">Delete a User</a>
+
+     <br>
+    <br>
+    <form action='/adminAmountofMatches' method='POST'>
+    <input type="submit" id="submit" value="Amount of matches">
+    </form>
+
+    <br>
+
+     <form action='/adminAmountofUsers' method='POST'>
+    <input type="submit" id="submit" value="Amount of users">
+    </form>
+
+    <br>
+
+
+    <form action='/logOut' method='POST'>
+    <input type="submit" id="submit" value="Log out">
+    </form>
+</body>

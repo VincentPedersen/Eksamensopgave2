@@ -16,24 +16,33 @@
     <p>Your preffered sex(s) is/are: <br> {{prefferedSex1}} <br> {{prefferedSex2}} <br> {{prefferedSex3}}</p> <br>
     <p>Your interests are {{interests1}}, {{interests2}} and {{interests3}} </p> <br>
 
-    
+    <br>
+
     <form action='/editUser' method='POST'>
     <input type="submit" id="submit" value="Edit User">
     </form>
+
+    <br>
 
     <form action='/logOut' method='POST'>
     <input type="submit" id="submit" value="Log out">
     </form>
 
-    <form action='/findYourLove' method='POST'>
+    <br>
+
+    <form action='/findYourLovePage' method='GET'>
     <input type="submit" id="submit" value="Find your Love">
     </form>
+
+    <br>
     
 
 <!-- Could not make it work with a button, so made it as a form instead...should work equally as well as with a button...however with a button it would probably just be one line of code --> 
     <form action='/deleteUser' method='POST'>
     <input type="submit" id="submit" value="Delete User" onclick="">
      </form> 
+
+     <br>
 
     <form action='/matches' method='POST'>
     <input type="submit" id="submit" value="My matches">

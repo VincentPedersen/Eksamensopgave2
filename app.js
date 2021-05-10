@@ -70,7 +70,9 @@ async function getEditUser(req,res){
 }
 
 async function getPotentialMatches(req,res){
-    user = await loadUserController(req,res)
+    var minAge = req.body.minAge;
+    var maxAge = req.body.maxAge;
+    user = await loadUserController(req,res,minAge,maxAge)
     app.get('/like',(req,res,next)=>{
         res.render('like',{
             first_name: user.first_name,
@@ -81,9 +83,6 @@ async function getPotentialMatches(req,res){
             interests1: user.interests1,
             interests2: user.interests2,
             interests3: user.interests3,
-            prefferedSex1: user.prefferedSex1,
-            prefferedSex2: user.prefferedSex2,
-            prefferedSex3: user.prefferedSex3
         });
     });
 
@@ -127,6 +126,46 @@ async function getFullProfileMatch(req,res,email){
     });
 }
 
+async function admingetEditUser(req,res,email){
+    var counter = 2;
+    user = await renderUserProfile.redirect(req,res,email,counter)
+    
+
+    app.get('/editUser',(req,res,next)=>{
+        res.render('editUser',{
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            age: user.age,
+            location: user.location,
+            gender: user.gender,
+            interests1: user.interests1,
+            interests2: user.interests2,
+            interests3: user.interests3,
+            prefferedSex1: user.prefferedSex1,
+            prefferedSex2: user.prefferedSex2,
+            prefferedSex3: user.prefferedSex3
+        });
+    });
+
+}
+
+function adminGetAmountMatches(req,res,amountMatches){
+    app.get('/amountMatches',(req,res,next)=>{
+        res.render('amountMatches',{
+            amountMatches:amountMatches
+        });
+    });
+}
+
+function adminGetAmountUsers(req,res,amountUsers){
+    app.get('/amountUsers',(req,res,next)=>{
+        res.render('amountUsers',{
+            amountUsers:amountUsers
+        });
+    });
+}
+
 
 
 module.exports = {
@@ -134,7 +173,10 @@ module.exports = {
     getEditUser,
     getPotentialMatches,
     getMatches,
-    getFullProfileMatch
+    getFullProfileMatch,
+    admingetEditUser,
+    adminGetAmountMatches,
+    adminGetAmountUsers
 }
 
 
@@ -151,31 +193,47 @@ const editUserController = require('./public/js/editUserController');
 const loadUserController = require('./public/js/loadUserController')
 const likeAndDislikeController = require('./public/js/likeAndDislikeController');
 const matchController = require('./public/js/matchController');
-const nextMatchController = require('./public/js/nextMatchController');
-const previousMatchController = require('./public/js/previousMatchController');
-const deleteMatchController = require('./public/js/deleteMatchController');
 const renderUserProfile = require('./public/js/renderUserProfileController')
 const stayLoggedin = require('./public/js/stayLoggedinController');
+const adminController = require('./public/js/adminController');
 const axios = require('axios').default;
 const { response } = require('express');
 const { unwatchFile } = require('fs');
 
 
 
-//const namespace =require('./namespace.js')
 
 app.use(express.static(path.join(__dirname, 'public')));
-/*
-router.get('/',function(req,res){
-  res.sendFile(path.resolve(__dirname+'/Client/index.html'));
-  //__dirname : It will resolve to your project folder.
-});
-*/
+
 app.get('/',(req,res,next)=>{
     res.render('welcome',{
         
     });
 });
+
+app.get('/admin',(req,res,next)=>{
+    res.render('admin',{
+        
+    });
+});
+
+app.get('/adminDeleteUser',(req,res,next)=>{
+    res.render('adminDeleteUser',{
+        
+    });
+});
+
+app.get('/adminEditUser',(req,res,next)=>{
+    res.render('adminEditUser',{
+        
+    });
+});
+
+app.post('/adminEditUser',adminController.adminEditUser)
+app.post('/adminDeleteUser',adminController.adminDeleteUser)
+app.post('/adminAmountofMatches',adminController.adminAmountofMatches)
+app.post('/adminAmountofUsers',adminController.adminAmountofUsers)
+
 
 app.get('/savedChanges',(req,res,next)=>{
     res.render('savedChanges',{
@@ -205,6 +263,12 @@ app.post('/newpass',newpasswordController);
 app.get('/login',(req,res,next)=>{
     res.render('login');
 });
+
+app.get('/findYourLovePage',(req,res,next)=>{
+    res.render('findYourLove',{
+        
+    });
+});
 app.post('/login',loginController);
 
 app.post('/deleteUser',deleteUserController);
@@ -225,12 +289,7 @@ app.post('/previous',matchController.smtPreviousMatch);
 app.post('/seeFullmatch',matchController.seeFullMatch)
 app.post('/deleteMatch',matchController.deleteMatch)
 
-/*
-app.views({
-    path: views,
-    isCached: false
-});
-*/
+
 app.engine('hbs',exphbs({
     defaultLayout:'main',
     extname:'.hbs'

@@ -20,9 +20,9 @@ async function login (req,res){
     var email = req.body.email; 
     var password = req.body.password; 
     
+    
     //Saves the email adress in local storage so it can be used by deleteUserController
     global.localStorage.setItem('email',email);
-    //console.log(localStorage.getItem('email'))
 
     //gets the hashedpassword that is stored with that email.
     var hashedpassword = await functionPost.login(email);
@@ -36,11 +36,16 @@ async function login (req,res){
     
 }
 
-function failOrnot(req,res,response){
+function failOrnot(req,res,response,email){
     
     
     if (response==true){
-        app.getVariables(req,res);
+        if(email==='Admin'){
+            res.redirect("/Admin");
+        } else{
+            app.getVariables(req,res);
+        }
+        
     } else {
          res.redirect("/login");
          alert("Wrong username or password!");
