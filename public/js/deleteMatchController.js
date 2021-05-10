@@ -2,7 +2,7 @@ var fs = require('fs');
 let alert = require('alert');
 
 const loginController = require('./loginController');
-const likeController = require('./likeController');
+const likeController = require('./likeAndDislikeController');
 const loadUserController = require('./loadUserController');
 
 

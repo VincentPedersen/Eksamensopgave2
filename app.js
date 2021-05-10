@@ -13,18 +13,16 @@ app.set('env development')
 //functions...This is def not the best way to do this, but couldn't really come up with another one
 //Maybe I will come up with another way to fix this, but so far this is the best option
 //makes login kinda slow as well, but nothing too too bad 
-async function getVariables(req,res,email/*,newUser,editid*/){
+async function getVariables(req,res){
     var counter = 1;
-    /*if (editid==true){
-        var user = newUser;
-    } else {*/
+    
         var email = localStorage.getItem('email');
         //was not working at all when using var or let...so had to just define global variable, that worked for some reason...Maybe something with running it multiple times???
-        user = await renderUserProfile(req,res,email,counter)
-    //}
-    console.log(user)
+        user = await renderUserProfile.redirect(req,res,email,counter)
+    
+    //console.log(user)
     app.get('/homepage',(req,res,next)=>{
-        console.log(user.first_name)
+        //console.log(user.first_name)
        res.setHeader("Cache-Control","no-cache, no-store, must-revalidate");
        res.setHeader("Pragma","no-cache")
        res.setHeader("Expires","0");
@@ -34,19 +32,23 @@ async function getVariables(req,res,email/*,newUser,editid*/){
             last_name: user.last_name,
             age: user.age,
             location: user.location,
-            gender: user.gender
-            /*
-            nationality: displayNationality,
-            prefferedSex: displayPrefferedSex,
-            interests: displayInterests*/
+            gender: user.gender,
+            interests1: user.interests1,
+            interests2: user.interests2,
+            interests3: user.interests3,
+            prefferedSex1: user.prefferedSex1,
+            prefferedSex2: user.prefferedSex2,
+            prefferedSex3: user.prefferedSex3
         });
     });
 
 }
 
-async function getEditUser(req,res,email){
-    var counter = 2; 
-    user = await renderUserProfile(req,res,email,counter)
+async function getEditUser(req,res){
+    var counter = 2;
+    var email = localStorage.getItem('email'); 
+    user = await renderUserProfile.redirect(req,res,email,counter)
+    
 
     app.get('/editUser',(req,res,next)=>{
         res.render('editUser',{
@@ -55,18 +57,84 @@ async function getEditUser(req,res,email){
             last_name: user.last_name,
             age: user.age,
             location: user.location,
-            gender: user.gender
+            gender: user.gender,
+            interests1: user.interests1,
+            interests2: user.interests2,
+            interests3: user.interests3,
+            prefferedSex1: user.prefferedSex1,
+            prefferedSex2: user.prefferedSex2,
+            prefferedSex3: user.prefferedSex3
         });
     });
 
 }
 
+async function getPotentialMatches(req,res){
+    user = await loadUserController(req,res)
+    app.get('/like',(req,res,next)=>{
+        res.render('like',{
+            first_name: user.first_name,
+            last_name: user.last_name,
+            age: user.age,
+            location: user.location,
+            gender: user.gender,
+            interests1: user.interests1,
+            interests2: user.interests2,
+            interests3: user.interests3,
+            prefferedSex1: user.prefferedSex1,
+            prefferedSex2: user.prefferedSex2,
+            prefferedSex3: user.prefferedSex3
+        });
+    });
+
+}
+
+async function getMatches(req,res,counter){
+    if (counter===0){
+        matches = await Promise.resolve(matchController.match(req,res))
+    } else if (counter===1){
+        matches = await Promise.resolve(matchController.nextMatch(req,res))
+    } else if (counter===2){
+        matches =  await Promise.resolve(matchController.previousMatch(req,res))
+    }
+    app.get('/matches',(req,res,next)=>{
+        res.render('matches',{
+            first_name: matches.first_name,
+            last_name: matches.last_name,
+            visibilityNext: nextButtonVisibility,
+            visibilityPrevious: previousButtonVisibility
+        });
+    });
+}
+
+async function getFullProfileMatch(req,res,email){
+   var counter = 3;
+    user = await renderUserProfile.redirect(req,res,email,counter)
+    app.get('/fullProfile',(req,res,next)=>{
+        res.render('fullProfile',{
+            first_name: user.first_name,
+            last_name: user.last_name,
+            age: user.age,
+            location: user.location,
+            gender: user.gender,
+            interests1: user.interests1,
+            interests2: user.interests2,
+            interests3: user.interests3,
+            prefferedSex1: user.prefferedSex1,
+            prefferedSex2: user.prefferedSex2,
+            prefferedSex3: user.prefferedSex3
+        });
+    });
+}
 
 
 
 module.exports = {
     getVariables,
     getEditUser,
+    getPotentialMatches,
+    getMatches,
+    getFullProfileMatch
 }
 
 
@@ -81,8 +149,7 @@ const logOutController = require('./public/js/logOutController');
 const deleteUserController = require('./public/js/deleteUserController');
 const editUserController = require('./public/js/editUserController');
 const loadUserController = require('./public/js/loadUserController')
-const likeController = require('./public/js/likeController');
-const dislikeController = require('./public/js/dislikeController');
+const likeAndDislikeController = require('./public/js/likeAndDislikeController');
 const matchController = require('./public/js/matchController');
 const nextMatchController = require('./public/js/nextMatchController');
 const previousMatchController = require('./public/js/previousMatchController');
@@ -91,6 +158,7 @@ const renderUserProfile = require('./public/js/renderUserProfileController')
 const stayLoggedin = require('./public/js/stayLoggedinController');
 const axios = require('axios').default;
 const { response } = require('express');
+const { unwatchFile } = require('fs');
 
 
 
@@ -141,44 +209,21 @@ app.post('/login',loginController);
 
 app.post('/deleteUser',deleteUserController);
 
-app.post('/editUser',editUserController.editUser);
-app.post('/updateUser',editUserController.updateUser);
+app.post('/editUser',getEditUser);
+app.post('/updateUser',editUserController);
 app.post('/logOut',logOutController);
 
-app.get('/like',(req,res,next)=>{
-    res.render('like',{
-        name: userProfileUsername,
-        password: userProfilePassword,
-        gender: userProfileGender,
-        nationality: userProfileNationality,
-        location: userProfileLocation,
-        prefferedSex: userProfilePrefferedSex,
-        interests: userProfileInterests
-    });
-});
 
-app.post('/findYourLove',loadUserController);
-app.post('/like',likeController);
-app.post('/dislike',dislikeController);
+app.post('/findYourLove',getPotentialMatches);
+app.post('/like',likeAndDislikeController.like);
+app.post('/dislike',likeAndDislikeController.dislike);
 
-app.get('/matches',(req,res,next)=>{
-    res.render('matches',{
-        name: matchProfileUsername,
-        password: matchProfilePassword,
-        gender: matchProfileGender,
-        nationality: matchProfileNationality,
-        location: matchProfileLocation,
-        prefferedSex: matchProfilePrefferedSex,
-        interests: matchProfileInterests, 
-        visibilityNext: nextButtonVisibility,
-        visibilityPrevious: previousButtonVisibility
-    });
-});
 
-app.post('/matches',matchController);
-app.post('/next',nextMatchController);
-app.post('/previous',previousMatchController);
-app.post('/deleteMatch',deleteMatchController)
+app.post('/matches',matchController.smtMatch);
+app.post('/next',matchController.smtNextMatch);
+app.post('/previous',matchController.smtPreviousMatch);
+app.post('/seeFullmatch',matchController.seeFullMatch)
+app.post('/deleteMatch',matchController.deleteMatch)
 
 /*
 app.views({

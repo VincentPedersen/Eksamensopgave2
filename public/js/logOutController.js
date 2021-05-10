@@ -1,14 +1,10 @@
 
 const loginController = require('./loginController');
+var polyfill = require('localstorage-polyfill');
 function logOut(req,res){
 
-    displayName = undefined;
-    displayPassword = undefined;
-    displayGender = undefined;
-    displayNationality = undefined;
-    displayLocation = undefined;
-    displayPrefferedSex = undefined;
-    displayInterests = undefined;
+    localStorage.removeItem('email');
+    console.log(localStorage.getItem('name'))
 
     res.redirect("/login")
 }

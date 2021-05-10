@@ -1,0 +1,23 @@
+<head>
+    <title>Match Full profile Page</title>
+</head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<body>
+    
+    <h1>Name: {{first_name}}  {{last_name}}</h1> <br> 
+    <p>Age: {{age}}</p> <br>
+    <p>Location: {{location}}</p> <br>
+    <p>Gender: {{gender}}</p> <br>
+    <p>Preffered sex(s) is/are: <br> {{prefferedSex1}} <br> {{prefferedSex2}} <br> {{prefferedSex3}}</p> <br>
+    <p>Interests are {{interests1}}, {{interests2}} and {{interests3}} </p> <br>
+
+    
+
+
+    <form action='/matches' method='POST'>
+    <input type="submit" id="submit" value="My matches">
+    </form>
+</body>

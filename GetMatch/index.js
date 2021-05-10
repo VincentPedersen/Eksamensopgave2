@@ -11,19 +11,16 @@ const executeSQL = (context,email) => {
 
 
     //Create the command to be executed
-    const request = new Request(`SELECT _User.id,_User.email,_User.First_name,_User.Last_Name,_User.Age,_User.Location,_Gender2.name AS Gender, _Interests.name AS Interests,_Gender.name AS PrefferedSex
-                                FROM [dating_app].[User] AS _User
-                                JOIN [dating_app].[Interested_in_gender] AS _InterestedIn
-                                ON _InterestedIn.User_id = _User.id
-                                JOIN [dating_app].[Gender] AS _Gender
-                                ON _InterestedIn.Gender_id = _Gender.id
-                                JOIN [dating_app].[User_Interests] AS _UserInterest
-                                ON _UserInterest.User_id = _User.id
-                                JOIN [dating_app].[Interests] AS _Interests
-                                ON _UserInterest.Interests_id = _Interests.id
-                                JOIN [dating_app].[Gender] AS _Gender2
-                                ON _User.Gender_id = _Gender2.id
-                                WHERE email='${email}'`,function(err){
+    
+    const request = new Request(`SELECT _User.id, _User.first_name,_User.last_name,_User2.id,_User2.first_name,_User2.last_name
+                                FROM [dating_app].[Match] AS _Match
+                                INNER JOIN [dating_app].[Likes] AS _Likes
+                                ON _Likes.id = _Match.Like_id
+                                INNER JOIN [dating_app].[User] AS _User 
+                                ON _User.id = _Likes.User_id
+                                INNER JOIN [dating_app].[User] AS _User2
+                                ON _User2.id = _Likes.User2_id
+                                WHERE (_User.email = '${email}' AND  _User2.email != '${email}') OR (_User2.email = '${email}' AND _User.email != '${email}')`,function(err){
         if (err) {
             context.log.error(err);
             context.res.status = 500; 
@@ -63,10 +60,11 @@ const executeSQL = (context,email) => {
     connection.connect();
 }
 
-function RenderUserProfile (context, req) {
+function getMatch (context, req) {
     try {
     context.log('JavaScript HTTP trigger function processed a request.');
     const email = (req.query.email || (req.body && req.body.email));
+    
 
     executeSQL(context,email)
     }
@@ -74,4 +72,4 @@ function RenderUserProfile (context, req) {
         console.log(err)
     }
 }
-module.exports = RenderUserProfile;
+module.exports = getMatch;

@@ -4,12 +4,9 @@
 
 <body>
     <h1>Your Matches <3</h1>
-    <p>Name: {{name}}</p> <br>
-    <p>Gender: {{gender}}</p> <br>
-    <p>Nationality: {{nationality}}</p> <br>
-    <p>Location: {{location}}</p> <br>
-    <p>Preffered Sex: {{prefferedSex}}</p> <br>
-    <p>Interests: {{interests}}</p> <br>
+    <p>First name: {{first_name}}</p> <br>
+    <p>Last name: {{last_name}}</p> <br>
+    
 
 {{#if visibilityNext}}
     <form id="formNext" name="formNext" action='/next' method='POST'>
@@ -22,11 +19,18 @@
     </form>
 {{/if}}
 
+    <form action='/seeFullmatch' method='POST'>
+    <input type="submit" id="submit" value="See matches profile">
+    </form>
+
     <form action='/deleteMatch' method='POST'>
     <input type="submit" id="submit" value="Delete Match">
     </form>
-
-    <a href="/homepage">My profile</a> <br>
+ 
+    <form action='/homepage' method='POST'>
+    <input type="submit" id="submit" value="Go back to homepage">
+    </form>
+    
     
 
     

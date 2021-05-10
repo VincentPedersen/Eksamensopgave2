@@ -1,5 +1,6 @@
 <head>
     <title>Edit user</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -19,17 +20,39 @@
                 Other <input type="radio" id="newGender" name="newGender" value=3><br> <br>
                 <label for="updateLocation">Location</label> <br>
                 <input type="text" id="newLocation" name="newLocation" placeholder={{location}}> <br> <br>
-                <!--
                 <label for="updatePrefferedSex">Preffered sex</label> <br>
-                <label for="currentPrefferedSex">Your currently preffered Sex is: {{prefferedSex}}</label> <br> 
-                Male<input type="radio" id="updatePrefferedSex" name="updatePrefferedSex" value="Male"> 
-                Female<input type="radio" id"updatePrefferedSex" name="updatePrefferedSex" value="Female"> <br> <br>
+                <label for="currentPrefferedSex">Your currently preffered Sex(s) is/are: <br> {{prefferedSex1}} <br> {{prefferedSex2}} <br> {{prefferedSex3}} </label> <br> 
+                Male<input class="notsingle-checkbox" type="checkbox" id="prefferedSex" name="prefferedSex" value="1"> 
+                Female<input class="notsingle-checkbox" type="checkbox" id"prefferedSex" name="prefferedSex" value="2"> 
+                Other<input class="notsingle-checkbox" type="checkbox" id="prefferedSex" name="prefferedSex" value="3">  <br> <br>
                 <label for="updateInterests">Interests</label> <br>
-                <input type="text" id="updateInterests" name="updateInterests" placeholder={{interests}}> <br> <br>-->
+                <label for="currentInterests">Your current Interests are {{interests1}}, {{interests2}} and {{interests3}} </label>
+
+                <label for="interests">(Select your top 3 interests)</label> <br>
+                <div id="subscriber_1" class="subscriber">
+                Sport<input class="single-checkbox" type="checkbox" name="interests" id="interests" value="1">
+                Cooking<input class="single-checkbox" type="checkbox" name="interests" id="interests" value="2">
+                Travelling<input class="single-checkbox" type="checkbox" name="interests" id="interests"value="3"> <br>
+                Movies<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="4">
+                Books<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="5">
+                Art<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="6"> <br>
+                Partying<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="7">
+                Music<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="8"> 
+                Fashion<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="9"><br> <br> 
+                </div><br> <br>
                 <input type="submit" id="submit" value="submit" onclick=""><br>
               </form>
               
               <a href="/newPassword">Change password</a> <br>
+              <script>  
+                //Code to make a maximum of 3 picks for interests
+                $('.subscriber :checkbox').change(function () {
+              var $cs = $(this).closest('.subscriber').find(':checkbox:checked');
+              if ($cs.length > 3) {
+              this.checked = false;
+                }
+                });
+                </script>
    
 
     

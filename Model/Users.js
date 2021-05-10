@@ -3,7 +3,8 @@ const saltRounds = 10;
 
 
 class User {
-    constructor (email,password,first_name,last_name,age,location,gender){
+    constructor (id,email,password,first_name,last_name,age,location,gender,interests1,interests2,interests3,prefferedSex1,prefferedSex2,prefferedSex3){
+        this.id = id;
         this.email = email; 
         this.password = password; 
         this.first_name = first_name;
@@ -11,9 +12,12 @@ class User {
         this.age = age; 
         this.location = location;
         this.gender = gender; 
-        //this.nationality = nationality;  
-        //this. prefferedSex = prefferedSex; 
-        //this.interests = interests; 
+        this.interests1 = interests1; 
+        this.interests2 = interests2; 
+        this.interests3 = interests3;   
+        this. prefferedSex1 = prefferedSex1;
+        this. prefferedSex2 = prefferedSex2;
+        this. prefferedSex3 = prefferedSex3;
         //this.match = match;
         //this.image = image; 
     }

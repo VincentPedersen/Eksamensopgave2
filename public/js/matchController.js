@@ -1,94 +1,185 @@
 var fs = require('fs');
 let alert = require('alert');
+var functionPost = require('../../Azure functions/FunctionPOST');
+var User = require('../../Model/Users');
+var app = require('../../app');
+const e = require('express');
 
-const loginController = require('./loginController');
-const likeController = require('./likeController');
-const loadUserController = require('./loadUserController');
 
 
+//In general pretty ugly code in this controller, but it does its job
+function smtMatch(req,res){
+    var counter=0;
+    app.getMatches(req,res,counter)
+}
 
-function match (req,res){
-    var likes = {
-        table:[]
-    };
-    var user = {
-        table:[]
-    };
+function smtNextMatch(req,res){
+    var counter=1;
+    app.getMatches(req,res,counter)
+}
 
-    try {
+function smtPreviousMatch(req,res){
+    var counter=2;
+    app.getMatches(req,res,counter)
+}
+async function match (req,res){
 
-        var jsonlikes = fs.readFileSync('likes.json',"utf8")
-        //console.log(jsonUsers)
-        if (jsonlikes!==undefined||jsonlikes.length>0){
-        likes = JSON.parse(jsonlikes);
-        }
-        if (likes==undefined) throw "file is empty"
-        } catch (err){
-            console.log(err)
-        }
-
-        try {
+    var email = localStorage.getItem('email');
+    var result = await Promise.resolve(functionPost.getMatch(email));
+    if (typeof result[0]==='undefined'){
+        alert("You have no matches")
+        app.getVariables(req,res)
         
-            var jsonUsers = fs.readFileSync('newUser.json',"utf8")
-            //console.log(jsonUsers)
-            if (jsonUsers!==undefined||jsonUsers.length>0){
-            user = JSON.parse(jsonUsers);
-            }
-            if (user==undefined) throw "file is empty"
-            } catch (err){
-                console.log(err)
-            }
+    } else {
+        var ownUser = await Promise.resolve(functionPost.renderUserProfile(email));
+    
 
-            matchArray = {
-                table:[]
-            };
-            
+        var ownid = ownUser[0];
+        var ownFirstName = ownUser[2];
+        var ownLastName = ownUser[3];
 
-for (var g=0;g<likes.table.length;g++){
-for (var j=0;j<likes.table.length;j++){
-    if (displayName===likes.table[g].username&&likes.table[g].username2===likes.table[j].username&&likes.table[j].username2===displayName){
-        var match = likes.table[g].username2;
-        for (var i=0;i<user.table.length;i++){
-            if(match===user.table[i].username){
-                matchArray.table.push(user.table[i]);
-            }
+        console.log(result)
+
+        const obj = {
+            input: result,
+            removeItem(item) {
+            this.input = this.input.filter(i => i !== item);
+            return this;
         }
+        }
+     
+        const output = obj.removeItem(ownid)
+                            .removeItem(ownFirstName)
+                            .removeItem(ownLastName);
+           
+        console.log(output.input);
+
+        global.localStorage.setItem('matches',output.input)
+        console.log(localStorage.getItem('matches'))
+        //Gross with global variable...I know, just couldn't think of another way to fix this
+        q = 0;
+
+        var id = output.input[0]
+        var first_name = output.input[1]
+        var last_name = output.input[2]
+
+
+    
+     
+
+        var user = new User(id,'','',first_name,last_name,'',)
+    
+
+        var matches = localStorage.getItem('matches');
+        var matchesArray = matches.split(",")
+        console.log(matchesArray)
+
+        if(matchesArray.length>3){
+            nextButtonVisibility = true;
+            } else {
+            nextButtonVisibility = false;
+            }
+            previousButtonVisibility = false;
         
-}
 
-}
-    
-    
-}
+            res.redirect("/matches")
 
-
-
-    if (matchArray.table.length===0||matchArray.table==undefined){
-        alert("You have no matches!");
-        res.redirect("/homepage");
+        return user; 
     }
-
-
-console.log(matchArray);
-
-    matchProfileUsername = matchArray.table[0].username;
-    matchProfilePassword = matchArray.table[0].password;
-    matchProfileGender = matchArray.table[0].gender;
-    matchProfileNationality = matchArray.table[0].nationality; 
-    matchProfileLocation = matchArray.table[0].location;
-    matchProfilePrefferedSex = matchArray.table[0].prefferedSex;
-    matchProfileInterests = matchArray.table[0].interests;
-if(matchArray.table.length>1){
-nextButtonVisibility = true;
-} else {
-nextButtonVisibility = false;
-}
-previousButtonVisibility = false;
-q=0; 
-
-
-res.redirect("/matches");
-
 }
 
-module.exports = match; 
+function nextMatch (req,res){
+   var matches = localStorage.getItem('matches');
+   var matchesArray = matches.split(",")
+   q = q+3
+   matchesArray.splice(0,q);
+   var id = matchesArray[0];
+   var first_name = matchesArray[1];
+   var last_name = matchesArray[2];
+
+   var user = new User(id,'','',first_name,last_name,'',)
+    console.log(matchesArray);
+
+
+    if(matchesArray.length>3){
+        nextButtonVisibility = true;
+        } else {
+        nextButtonVisibility = false;
+        }
+        previousButtonVisibility = true;
+    res.redirect("/matches")
+    return user
+
+
+}
+
+function previousMatch (req,res){
+    var matches = localStorage.getItem('matches');
+    var matchesArray = matches.split(",")
+    q = q-3
+    matchesArray.splice(0,q);
+    var id = matchesArray[0];
+    var first_name = matchesArray[1];
+    var last_name = matchesArray[2];
+ 
+    var user = new User(id,'','',first_name,last_name,'',)
+     console.log(matchesArray);
+ 
+     
+
+     if(matchesArray.length>3){
+        nextButtonVisibility = true;
+        } else {
+        nextButtonVisibility = false;
+        }
+    if (q===0){
+        previousButtonVisibility = false;
+    }
+     res.redirect("/matches")
+     return user
+ 
+ 
+ }
+
+async function seeFullMatch(req,res){
+    var matches = localStorage.getItem('matches');
+    var matchesArray = matches.split(",")
+    matchesArray.splice(0,q);
+    var id = matchesArray[0];
+    var first_name = matchesArray[1];
+    var last_name = matchesArray[2];
+
+    var user = new User(id,'','',first_name,last_name,'',)
+
+    var email = await Promise.resolve(functionPost.getEmailFromId(user))
+
+    app.getFullProfileMatch(req,res,email)
+    return email
+}
+
+async function deleteMatch(req,res){
+    var matches = localStorage.getItem('matches');
+    var matchesArray = matches.split(",")
+    matchesArray.splice(0,q);
+    var user2_id = matchesArray[0];
+    var email = localStorage.getItem('email');
+
+    var user_id = await Promise.resolve(functionPost.getIdFromEmail(email))
+
+
+    var result = await Promise.resolve(functionPost.deleteMatch(user_id,user2_id))
+
+    smtMatch(req,res)
+}
+
+
+module.exports = {
+    smtMatch,
+    smtNextMatch,
+    smtPreviousMatch,
+    match,
+    nextMatch,
+    previousMatch,
+    seeFullMatch,
+    deleteMatch
+};

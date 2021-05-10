@@ -3,7 +3,7 @@ var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
 const config = require('../Database/config.json');
 
-const executeSQL = (context,email) => {
+const executeSQL = (context,email,user2_id) => {
     var result = [];
 
     //Create connection object
@@ -11,19 +11,17 @@ const executeSQL = (context,email) => {
 
 
     //Create the command to be executed
-    const request = new Request(`SELECT _User.id,_User.email,_User.First_name,_User.Last_Name,_User.Age,_User.Location,_Gender2.name AS Gender, _Interests.name AS Interests,_Gender.name AS PrefferedSex
+    //Makes a self join (a join on the same table) to check if it's a match
+    const request = new Request(`DECLARE @user_id INT
+                                SELECT @user_id = _User.id
                                 FROM [dating_app].[User] AS _User
-                                JOIN [dating_app].[Interested_in_gender] AS _InterestedIn
-                                ON _InterestedIn.User_id = _User.id
-                                JOIN [dating_app].[Gender] AS _Gender
-                                ON _InterestedIn.Gender_id = _Gender.id
-                                JOIN [dating_app].[User_Interests] AS _UserInterest
-                                ON _UserInterest.User_id = _User.id
-                                JOIN [dating_app].[Interests] AS _Interests
-                                ON _UserInterest.Interests_id = _Interests.id
-                                JOIN [dating_app].[Gender] AS _Gender2
-                                ON _User.Gender_id = _Gender2.id
-                                WHERE email='${email}'`,function(err){
+                                WHERE _User.email = '${email}'
+                                SELECT _Likes.id
+                                FROM [dating_app].[Likes] AS _Likes, [dating_app].[Likes] AS _Likes2
+                                WHERE _Likes.User_id = _Likes2.User2_id
+                                AND _Likes.User2_id = _Likes2.User_id
+                                AND (_Likes.User_id = @user_id OR _Likes.User2_id = @user_id)
+                                AND(_Likes2.User_id = '${user2_id}' OR _Likes2.User2_id = '${user2_id}')`,function(err){
         if (err) {
             context.log.error(err);
             context.res.status = 500; 
@@ -63,15 +61,16 @@ const executeSQL = (context,email) => {
     connection.connect();
 }
 
-function RenderUserProfile (context, req) {
+function checkForMatch (context, req) {
     try {
     context.log('JavaScript HTTP trigger function processed a request.');
     const email = (req.query.email || (req.body && req.body.email));
+    const user2_id = (req.query.user2_id || (req.body && req.body.user2_id));
 
-    executeSQL(context,email)
+    executeSQL(context,email,user2_id)
     }
     catch (err){
         console.log(err)
     }
 }
-module.exports = RenderUserProfile;
+module.exports = checkForMatch;

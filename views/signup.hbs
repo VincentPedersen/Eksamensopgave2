@@ -1,5 +1,7 @@
 <head> 
         <title>Sign up</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        
 
     </head>
     <body> 
@@ -15,21 +17,42 @@
                 <input type="text" id="last_name" name="last_name" placeholder="Your last name..."required> <br>
                 <label for="age">Age</label> <br>
                 <input type="text" id="age" name="age" placeholder="Your age..."required> <br>
-                <label for="gender">gender</label> <br>
-                <!--<input type="text" id="gender" name="gender" placeholder="Your gender..."required> <br> -->
-                Male<input type="radio" id="gender" name="gender" value="1">
-                Female<input type="radio" id="gender" name="gender" value="2">
-                Other<input type="radio" id="gender" name="gender" value="3"> <br>
+                <label for="gender">Gender</label> <br>
+                Male<input class="notsingle-checkbox" type="radio" id="gender" name="gender" value="1">
+                Female<input class="notsingle-checkbox" type="radio" id="gender" name="gender" value="2">
+                Other<input class="notsingle-checkbox" type="radio" id="gender" name="gender" value="3"> <br>
               
-                <label for="location">location</label> <br>
-                <input type="text" id="location" name="location" placeholder="Your location.."> <br>
-                <label for="prefferedSex">prefferedSex</label> <br>
-                Male<input type="radio" id="prefferedSex" name="prefferedSex" value="Male"> 
-                Female<input type="radio" id"prefferedSex" name="prefferedSex" value="Female"> <br>
-                <label for="interests">interests</label> <br>
-                <input type="text" id="interests" name="interests" placeholder="Your interests.."> <br>
-                <input type="submit" id="submit" value="submit" onclick=""><br>
+                <label for="location">Location</label> <br>
+                <input type="text" id="location" name="location" placeholder="Your location.."> <br> <br> 
+                <label for="prefferedSex">PrefferedSex</label> <br>
+                Male<input class="notsingle-checkbox" type="checkbox" id="prefferedSex" name="prefferedSex" value="1"> 
+                Female<input class="notsingle-checkbox" type="checkbox" id"prefferedSex" name="prefferedSex" value="2"> 
+                Other<input class="notsingle-checkbox" type="checkbox" id="prefferedSex" name="prefferedSex" value="3"> <br> <br>
+                <label for="interests">Interests(Select your top 3 interests)</label> <br>
+                <div id="subscriber_1" class="subscriber">
+                Sport<input class="single-checkbox" type="checkbox" name="interests" id="interests" value="1">
+                Cooking<input class="single-checkbox" type="checkbox" name="interests" id="interests" value="2">
+                Travelling<input class="single-checkbox" type="checkbox" name="interests" id="interests"value="3"> <br>
+                Movies<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="4">
+                Books<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="5">
+                Art<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="6"> <br>
+                Partying<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="7">
+                Music<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="8"> 
+                Fashion<input class="single-checkbox" type="checkbox" name="interests"id="interests" value="9"><br> <br> 
+                </div>
+                  <input type="submit" id="submit" value="submit" onclick=""><br>
+                </select>
+                
               </form>
+              <script>  
+                //Code to make a maximum of 3 picks for interests
+                $('.subscriber :checkbox').change(function () {
+              var $cs = $(this).closest('.subscriber').find(':checkbox:checked');
+              if ($cs.length > 3) {
+              this.checked = false;
+                }
+                });
+                </script>
 
             
               <a href="/forgotpassword">Forgot Password?</a>

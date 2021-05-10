@@ -12,6 +12,8 @@ function deleteUser(req,res){
 
     functionPost.deleteUser(email);
 
+    localStorage.removeItem('email');
+
 
 
 res.redirect("/login")

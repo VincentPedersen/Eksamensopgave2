@@ -1,14 +1,17 @@
 const loginController=require('./loginController')
+var polyfill = require('localstorage-polyfill');
 function stayLoggedin(req,res){
 try {
-    if(displayName!=undefined){
+    if(localStorage.getItem('email') !== null){
         res.redirect("/homepage");
     
-    }if (displayName==undefined) throw "file is empty"
+    }else {
+        res.redirect("/login");
+    }
     } catch (err){
     console.log(err)
 }
-res.redirect("/login");
+
 
 }
 module.exports = stayLoggedin

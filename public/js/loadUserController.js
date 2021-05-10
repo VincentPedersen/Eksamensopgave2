@@ -1,105 +1,110 @@
 var fs = require('fs');
 let alert = require('alert');
-
-var user = {
-    table:[]
-};
-
-var likes = {
-    table:[]
-};
-var dislikes = {
-    table:[]
-};
+var functionPost = require('../../Azure functions/FunctionPOST');
+const User = require('../../Model/Users');
+var polyfill = require('localstorage-polyfill');
+var app = require('../../app')
 
 
-// Have to require the loginController, to find out which user is currently signed in, so you know which user to delete (through the displayname variable)
-const loginController = require('./loginController');
+
 
 //loads the potential new matches (the people you haven't liked or disliked yet)
-function loadUser (req,res){
+async function loadUser (){
     
-    try {
+    var email = localStorage.getItem('email');
+    console.log(email)
+    var result = await functionPost.loadUsers(email)
+    console.log(result)
 
-        var jsonUsers = fs.readFileSync('newUser.json',"utf8")
-        if (jsonUsers!==undefined||jsonUsers.length>0){
-        user = JSON.parse(jsonUsers);
-        }
-        if (user==undefined) throw "file is empty"
-        } catch (err){
-            console.log(err)
-        }
+    var uniqueResult = [...new Set(result)]
+    console.log(uniqueResult)
 
-
-        try {
-
-            var jsonlikes = fs.readFileSync('likes.json',"utf8")
-            if (jsonlikes!==undefined||jsonlikes.length>0){
-            likes = JSON.parse(jsonlikes);
-            }
-            if (likes==undefined) throw "file is empty"
-            } catch (err){
-                console.log(err)
-            }
-        
-            try {
-
-                var jsondislikes = fs.readFileSync('dislikes.json',"utf8")
-                if (jsondislikes!==undefined||jsondislikes.length>0){
-                dislikes = JSON.parse(jsondislikes);
-                }
-                if (dislikes==undefined) throw "file is empty"
-                } catch (err){
-                    console.log(err)
-                }
-
-    
-        //switches what user is being displayed
-        
-           for (var h=0;h<user.table.length;h++){
-            if(displayName===user.table[h].username){
-                user.table.splice(h,1);     
-        }
+    //Makes sure that if for some reason your last- and firstname are the same, that your last name doesn't get deleted
+    if(result[1]===result[2]){
+        var last_name = result[2]
+        uniqueResult.splice(2,0,last_name);
     }
-       for (var k=0;k<user.table.length;k++){
-        for (var i=0;i<likes.table.length;i++){
-        if (displayName===likes.table[i].username&&likes.table[i].username2===user.table[k].username) {   
-           user.table.splice(k,1);   
-           if (k!==0){
-            k--;
-            } 
-            
-        }
-        }
-    }  
+    
+    //Makes sure that if you have only chosen one prefferedSex, that it doesn't delete the two nulls
+    if(result[6]===result[14]){
+        var prefferedSex = result[14];
+        uniqueResult.push(prefferedSex)
+    } else if(result[6]===result[22]){
+        var prefferedSex = result[22];
+        uniqueResult.push(prefferedSex)
+    }else if(result[14]===result[22]){
+        var prefferedSex = result[22]
+        uniqueResult.push(prefferedSex)
+    } 
 
-    for (var g=0;g<user.table.length;g++){
-        for (var r=0;r<dislikes.table.length;r++){
-        if (displayName===dislikes.table[r].username&&dislikes.table[r].username2===user.table[g].username) {   
-           user.table.splice(g,1);   
-           if (g!==0){
-            g--;
-            } 
-            
+    
+        if(result[5]===result[6]){
+            var extraPrefferedSex = result[6]
+            uniqueResult.push(extraPrefferedSex);
+        } else if (result[5]===result[14]){
+            var extraPrefferedSex = result[14]
+            uniqueResult.push(extraPrefferedSex);
+        } else if (result[5]===result[22]){
+            var extraPrefferedSex = result[22]
+            uniqueResult.push(extraPrefferedSex);
+        } 
+    
+
+        for (var i=6;i<uniqueResult.length;i++){
+            if(uniqueResult[i]==null||uniqueResult[i]==='Male'||uniqueResult[i]==='Female'||uniqueResult[i]==='Other'){
+                uniqueResult.push(uniqueResult.splice(i,1)[0]);
+            }
         }
+        for (var i=6;i<uniqueResult.length;i++){
+            if(uniqueResult[i]==null||uniqueResult[i]==='Male'||uniqueResult[i]==='Female'||uniqueResult[i]==='Other'){
+                uniqueResult.push(uniqueResult.splice(i,1)[0]);
+            }
         }
-    }  
         
-                if (user.table.length===0||user.table==undefined){
-                    res.redirect("/homepage")
-                    alert("There are no more users to like!");
-                } else if (user.table[0]!=undefined){
-                userProfileUsername = user.table[0].username;
-                userProfilePassword = user.table[0].password;
-                userProfileGender = user.table[0].gender;
-                userProfileNationality = user.table[0].nationality;
-                userProfileLocation = user.table[0].location;
-                userProfilePrefferedSex = user.table[0].prefferedSex;
-                userProfileInterests = user.table[0].interests;
 
-                res.redirect("/like")
-                } 
-
-res.redirect("/like")
+    console.log(uniqueResult)
+    return uniqueResult
 }
-module.exports = loadUser; 
+async function assignValues (){
+    var result = await loadUser()
+    var id = result[0];
+    var first_name = result[1];
+    var last_name = result[2];
+    var age = result[3];
+    var location = result[4];
+    var gender = result[5];
+    var interests1 = result[6];
+    var interests2 = result[7];
+    var interests3 = result[8];
+    var prefferedSex1 = result[9];
+    var prefferedSex2 = result[10];
+    var prefferedSex3 = result[11];
+
+    if(typeof prefferedSex2 === 'undefined'){
+        var user = new User(id,'','',first_name,last_name,age,location,gender,interests1,interests2,interests3,prefferedSex1,'','')
+    } else if(typeof prefferedSex3 === 'undefined'){
+        var user = new User(id,'','',first_name,last_name,age,location,gender,interests1,interests2,interests3,prefferedSex1,prefferedSex2,'')
+    } else {
+        var user = new User(id,'','',first_name,last_name,age,location,gender,interests1,interests2,interests3,prefferedSex1,prefferedSex2,prefferedSex3)
+    }
+    return user
+
+}
+
+async function redirect(req,res){
+    var user = await assignValues();
+    global.localStorage.setItem('user2_id',user.id);
+    
+   // console.log(user)
+    
+            if(typeof user.id ==='undefined'){
+                app.getVariables(req,res)
+                alert("There are no more users to like!");
+            } else{
+                res.redirect("/like");
+            }
+    return user
+}
+
+
+module.exports = redirect; 

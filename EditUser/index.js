@@ -3,7 +3,7 @@ var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
 const config = require('../Database/config.json');
 
-const executeSQL = (context,newemail,email,first_name,last_name,age,location,gender) => {
+const executeSQL = (context,newemail,email,first_name,last_name,age,location,gender,interests1,interests2,interests3,prefferedSex1,prefferedSex2,prefferedSex3) => {
     var result = "";
 
     //Create connection object
@@ -11,7 +11,17 @@ const executeSQL = (context,newemail,email,first_name,last_name,age,location,gen
 
 
     //Create the command to be executed
-    const request = new Request(`UPDATE [dating_app].[User] SET email = '${newemail}',first_name = '${first_name}',last_name = '${last_name}',age = '${age}', location = '${location}', gender_id = '${gender}' WHERE email='${email}'`,function(err){
+    const request = new Request(`DECLARE @user_id INT 
+                                SELECT @user_id = _User.id
+                                FROM [dating_app].[User] AS _User
+                                WHERE _User.email = '${email}'
+                                UPDATE [dating_app].[User] SET email = '${newemail}',first_name = '${first_name}',last_name = '${last_name}',age = '${age}', location = '${location}', gender_id = '${gender}' WHERE email='${email}'
+                                UPDATE [dating_app].[Interested_in_gender] SET Gender_id = '${prefferedSex3}' WHERE id IN (SELECT TOP(3) id FROM [dating_app].[Interested_in_gender] WHERE User_id = @user_id ORDER BY id ASC)
+                                UPDATE [dating_app].[Interested_in_gender] SET Gender_id = '${prefferedSex2}' WHERE id IN (SELECT TOP(2) id FROM [dating_app].[Interested_in_gender] WHERE User_id = @user_id ORDER BY id ASC)
+                                UPDATE [dating_app].[Interested_in_gender] SET Gender_id = '${prefferedSex1}' WHERE id IN (SELECT TOP(1) id FROM [dating_app].[Interested_in_gender] WHERE User_id = @user_id ORDER BY id ASC)
+                                UPDATE [dating_app].[User_Interests] SET Interests_id = '${interests3}' WHERE id IN (SELECT TOP(3) id FROM [dating_app].[User_Interests] WHERE User_id = @user_id ORDER BY id ASC)
+                                UPDATE [dating_app].[User_Interests] SET Interests_id = '${interests2}' WHERE id IN (SELECT TOP(2) id FROM [dating_app].[User_Interests] WHERE User_id = @user_id ORDER BY id ASC)
+                                UPDATE [dating_app].[User_Interests] SET Interests_id = '${interests1}' WHERE id IN (SELECT TOP(1) id FROM [dating_app].[User_Interests] WHERE User_id = @user_id ORDER BY id ASC)`,function(err){
         if (err) {
             context.log.error(err);
             context.res.status = 500; 
@@ -51,7 +61,6 @@ const executeSQL = (context,newemail,email,first_name,last_name,age,location,gen
 }
 
 function editUser (context, req) {
-    console.log(req.body.passwordHash);
     try {
     context.log('JavaScript HTTP trigger function processed a request.');
     const newemail = (req.query.newemail || (req.body && req.body.newemail));
@@ -61,8 +70,14 @@ function editUser (context, req) {
     const age = (req.query.age || (req.body && req.body.age));
     const location = (req.query.location || (req.body && req.body.location));
     const gender = (req.query.gender || (req.body && req.body.gender));
+    const interests1 = (req.query.interests1 || (req.body && req.body.interests1))
+    const interests2 = (req.query.interests2 || (req.body && req.body.interests2))
+    const interests3 = (req.query.interests3 || (req.body && req.body.interests3))
+    const prefferedSex1 = (req.query.prefferedSex1 || (req.body && req.body.prefferedSex1)) 
+    const prefferedSex2 = (req.query.prefferedSex2 || (req.body && req.body.prefferedSex2)) 
+    const prefferedSex3 = (req.query.prefferedSex3 || (req.body && req.body.prefferedSex3)) 
 
-    executeSQL(context,newemail,email,first_name,last_name,age,location,gender)
+    executeSQL(context,newemail,email,first_name,last_name,age,location,gender,interests1,interests2,interests3,prefferedSex1,prefferedSex2,prefferedSex3)
     }
     catch (err){
         console.log(err)
