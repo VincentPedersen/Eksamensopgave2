@@ -4,6 +4,7 @@ const path = require('path');
 const router = express.Router();
 const exphbs = require('express-handlebars');
 const bodyparser = require('body-parser');
+var polyfill = require('localstorage-polyfill');
 
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(express.urlencoded({extended:false}));
@@ -69,10 +70,13 @@ async function getEditUser(req,res){
 
 }
 
-async function getPotentialMatches(req,res){
-    var minAge = req.body.minAge;
-    var maxAge = req.body.maxAge;
-    user = await loadUserController(req,res,minAge,maxAge)
+async function getPotentialMatches(req,res,minAge,maxAge,counter){
+    if(counter!==1){
+        var minAge  = localStorage.getItem('minAge')
+        var maxAge = localStorage.getItem('maxAge')
+    }
+    
+    user = await loadUserController.redirect(req,res,minAge,maxAge)
     app.get('/like',(req,res,next)=>{
         res.render('like',{
             first_name: user.first_name,
@@ -278,7 +282,7 @@ app.post('/updateUser',editUserController);
 app.post('/logOut',logOutController);
 
 
-app.post('/findYourLove',getPotentialMatches);
+app.post('/findYourLove',loadUserController.getPotentialMatches);
 app.post('/like',likeAndDislikeController.like);
 app.post('/dislike',likeAndDislikeController.dislike);
 

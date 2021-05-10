@@ -20,9 +20,11 @@ async function loadUser (req,res,minAge,maxAge){
     console.log(uniqueResult)
 
     //Makes sure that if for some reason your last- and firstname are the same, that your last name doesn't get deleted
-    if(result[1]===result[2]){
-        var last_name = result[2]
-        uniqueResult.splice(2,0,last_name);
+    if(typeof result !== 'undefined'){
+        if(result[1]===result[2]){
+            var last_name = result[2]
+            uniqueResult.splice(2,0,last_name);
+        }
     }
     
         
@@ -64,5 +66,18 @@ async function redirect(req,res,minAge,maxAge){
     return user
 }
 
+function getPotentialMatches(req,res){
+    var counter = 1
+    var minAge = req.body.minAge;
+    var maxAge = req.body.maxAge;
+    global.localStorage.setItem('minAge',minAge);
+    global.localStorage.setItem('maxAge',maxAge);
 
-module.exports = redirect; 
+    app.getPotentialMatches(req,res,minAge,maxAge,counter)
+}
+
+
+module.exports = {
+    redirect,
+    getPotentialMatches
+}; 

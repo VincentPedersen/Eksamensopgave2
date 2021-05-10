@@ -11,6 +11,8 @@ async function like (req,res){
     var counter = 1;
     var email = localStorage.getItem('email');
     var user2_id = localStorage.getItem('user2_id');
+    var minAge = 0;
+    var maxAge = 0;
     
 
     response = await Promise.resolve(functionPost.likeUser(email,user2_id,counter));
@@ -19,15 +21,18 @@ async function like (req,res){
     console.log(possibleMatch)
     if(typeof possibleMatch!=='undefined'){
         if(possibleMatch.length===2){
+            var counter = 2;
             alert("You have a new match <3");
             var match = new Match(possibleMatch[0],possibleMatch[1]);
             functionPost.insertMatch(match)
-            app.getPotentialMatches(req,res)
+            app.getPotentialMatches(req,res,minAge,maxAge,counter)
         } else {
-            app.getPotentialMatches(req,res)
+            var counter = 2;
+            app.getPotentialMatches(req,res,minAge,maxAge,counter)
         }
     } else {
-        app.getPotentialMatches(req,res)
+        var counter = 2;
+        app.getPotentialMatches(req,res,minAge,maxAge,counter)
     }
     
 
@@ -37,15 +42,17 @@ async function like (req,res){
                   
 }
 
-function dislike(req,res){
+async function dislike(req,res){
     //a number used so the azure function knows its dislike..since the same azure function is used for like and dislike
     var counter = 2; 
     var email = localStorage.getItem('email');
     var user2_id = localStorage.getItem('user2_id');
+    var minAge = 0;
+    var maxAge = 0;
 
-    functionPost.likeUser(email,user2_id,counter);
+    var promise = await Promise.resolve(functionPost.likeUser(email,user2_id,counter));
 
-    app.getPotentialMatches(req,res)
+    app.getPotentialMatches(req,res,minAge,maxAge,counter)
 }
 module.exports = {
     like,
