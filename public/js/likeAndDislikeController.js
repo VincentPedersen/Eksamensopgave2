@@ -1,4 +1,3 @@
-var fs = require('fs');
 let alert = require('alert');
 var functionPost = require('../../Azure functions/FunctionPOST');
 var app = require('../../app');
@@ -18,7 +17,6 @@ async function like (req,res){
     response = await Promise.resolve(functionPost.likeUser(email,user2_id,counter));
 
     var possibleMatch = await Promise.resolve (functionPost.checkForMatch(email,user2_id));
-    console.log(possibleMatch)
     if(typeof possibleMatch!=='undefined'){
         if(possibleMatch.length===2){
             var counter = 2;
@@ -50,6 +48,7 @@ async function dislike(req,res){
     var minAge = 0;
     var maxAge = 0;
 
+    //Have to make sure the like user function completes
     var promise = await Promise.resolve(functionPost.likeUser(email,user2_id,counter));
 
     app.getPotentialMatches(req,res,minAge,maxAge,counter)

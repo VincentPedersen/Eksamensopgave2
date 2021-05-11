@@ -1,4 +1,4 @@
-
+//Class used for user
 class User {
     constructor (id,email,password,first_name,last_name,age,location,gender,interests1,interests2,interests3,prefferedSex1,prefferedSex2,prefferedSex3){
         this.id = id;

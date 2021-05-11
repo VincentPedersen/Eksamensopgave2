@@ -1,6 +1,6 @@
-
-const loginController = require('./loginController');
 var polyfill = require('localstorage-polyfill');
+
+//logs out by removing email from local storage (this makes sure that the stay logged in controller doesnt't work)
 function logOut(req,res){
 
     localStorage.removeItem('email');

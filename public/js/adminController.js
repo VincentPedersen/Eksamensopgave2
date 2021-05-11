@@ -2,7 +2,7 @@ var app = require('../../app')
 var functionPost = require('../../Azure functions/FunctionPOST');
 var alert = require('alert');
 
-
+//Allows an admin to edit a user
 function adminEditUser(req,res){
     var email = req.body.email;
     global.localStorage.setItem('adminEmailChange',email)
@@ -10,6 +10,7 @@ function adminEditUser(req,res){
 
 }
 
+//Allows admin to delete user
 //Add something so it tells you if the user doesn't exist
 function adminDeleteUser(req,res){
     var email = req.body.email
@@ -18,7 +19,7 @@ function adminDeleteUser(req,res){
     alert("You successfully deleted the user")
     res.redirect("/Admin");
 }
-
+//Allows admin to get the amount of matches
 async function adminAmountofMatches(req,res){
     var amountMatches = await Promise.resolve(functionPost.adminAmountMatches());
 
@@ -28,6 +29,7 @@ async function adminAmountofMatches(req,res){
 
 
 }
+//Allows admin to get the amount of users
 async function adminAmountofUsers(req,res){
     var amountUsers = await Promise.resolve(functionPost.adminAmountUsers());
     app.adminGetAmountUsers(req,res,amountUsers);

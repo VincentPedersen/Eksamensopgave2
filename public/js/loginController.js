@@ -1,12 +1,9 @@
-//var bodyParser = require('body-parser')
-var fs = require('fs');
 var alert = require('alert');
 var functionPost = require('../../Azure functions/FunctionPOST');
 var app = require('../../app')
 const bcrypt = require('bcrypt');
 const { callbackPromise } = require('nodemailer/lib/shared');
 const { response } = require('express');
-const saltRounds = 10;
 var polyfill = require('localstorage-polyfill');
 
 
@@ -28,7 +25,6 @@ async function login (req,res){
     var hashedpassword = await functionPost.login(email);
     //compares the hashedpassword with the userwritten one
         bcrypt.compare(password,hashedpassword,(err,response)=>{
-            //console.log('Compared result',response,hashedpassword)
             failOrnot(req,res,response,email)
             return res 
             
@@ -40,6 +36,7 @@ function failOrnot(req,res,response,email){
     
     
     if (response==true){
+        //Makes sure that if the admin logges in, that they get sent to the admin homepage
         if(email==='Admin'){
             res.redirect("/Admin");
         } else{

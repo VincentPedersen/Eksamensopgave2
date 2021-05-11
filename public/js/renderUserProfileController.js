@@ -1,12 +1,11 @@
 var functionPost = require('../../Azure functions/FunctionPOST');
 var User = require('../../Model/Users');
 
+//Renders the user profile for the homepage
 async function renderUserProfile (email){
     
     var result = await functionPost.renderUserProfile(email);
-    console.log(result)
     var uniqueResult = [...new Set(result)]
-    console.log(uniqueResult)
 
     //Makes sure that if for some reason your last- and firstname are the same, that your last name doesn't get deleted
     if(result[2]===result[3]){
@@ -25,6 +24,7 @@ async function renderUserProfile (email){
         uniqueResult.push(prefferedSex)
     }
    
+    //Makes sure that if you have the same preffered sex as your one that it doesn't get deleted
         if(result[6]===result[8]){
             var extraPrefferedSex = result[8];
             uniqueResult.push(extraPrefferedSex);
@@ -36,18 +36,18 @@ async function renderUserProfile (email){
             var extraPrefferedSex = result[17];
             uniqueResult.push(extraPrefferedSex);
         } 
-    
+    //Moves the preffered sexes to the end
         for (var i=7;i<uniqueResult.length;i++){
             if(uniqueResult[i]==null||uniqueResult[i]==='Male'||uniqueResult[i]==='Female'||uniqueResult[i]==='Other'){
                 uniqueResult.push(uniqueResult.splice(i,1)[0]);
             }
         }
+    //Again moves the preffered sexes to the end (there are two loops because if the first one finds on and moves it and the other one is right behind, it will get overlooked)
         for (var i=7;i<uniqueResult.length;i++){
             if(uniqueResult[i]==null||uniqueResult[i]==='Male'||uniqueResult[i]==='Female'||uniqueResult[i]==='Other'){
                 uniqueResult.push(uniqueResult.splice(i,1)[0]);
             }
         }
-    console.log(uniqueResult)
     
     return uniqueResult;
 }
@@ -79,10 +79,9 @@ async function assignValues(email){
     return user
 }
 
-//most definetely not the best way to do this!!!
+//Probably not the best way to do this, but it works :)
 async function redirect(req,res,email,counter){
     var user = await assignValues(email);
-    //console.log(user)
         if (counter===1){
             res.redirect("/homepage");
         } else if (counter===2){

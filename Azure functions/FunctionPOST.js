@@ -1,4 +1,5 @@
 const axios = require('axios').default;
+//File where all the requests to azure functions are saved. Makes it easier to keep track of
 function signUp(user){
 axios.post('http://localhost:7071/api/SignUp',
             {email:user.email,first_name:user.first_name,last_name:user.last_name,age:user.age,location:user.location,gender:user.gender,password:user.password,interests1:user.interests1,interests2:user.interests2,interests3:user.interests3,prefferedSex1:user.prefferedSex1,prefferedSex2:user.prefferedSex2,prefferedSex3:user.prefferedSex3},

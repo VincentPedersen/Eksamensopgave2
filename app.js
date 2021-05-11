@@ -1,3 +1,4 @@
+//this file has become a little bit of a mess, especially with the functions at the top, but it works :) 
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -198,9 +199,8 @@ const loadUserController = require('./public/js/loadUserController')
 const likeAndDislikeController = require('./public/js/likeAndDislikeController');
 const matchController = require('./public/js/matchController');
 const renderUserProfile = require('./public/js/renderUserProfileController')
-const stayLoggedin = require('./public/js/stayLoggedinController');
+const stayLoggedinController = require('./public/js/stayLoggedinController');
 const adminController = require('./public/js/adminController');
-const axios = require('axios').default;
 const { response } = require('express');
 const { unwatchFile } = require('fs');
 

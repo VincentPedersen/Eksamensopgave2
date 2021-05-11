@@ -15,13 +15,16 @@ const executeSQL = (context,userId,user2Id) => {
     const request = new Request(`DELETE 
                                 FROM [dating_app].[Match] 
                                 WHERE id = (SELECT _Match.id
-                                            FROM [dating_app].[Match] AS _Match
-                                            WHERE _Match.Like_id = (SELECT _Likes.id FROM [dating_app].[Likes] AS _Likes WHERE _Likes.User_id = '${userId}' AND _Likes.User2_id = '${user2Id}') 
-                                            OR _Match.Like2_id = (SELECT _Likes.id FROM [dating_app].[Likes] AS _Likes WHERE _Likes.User_id = '${userId}' AND _Likes.User2_id = '${user2Id}'))
+                                FROM [dating_app].[Match] AS _Match
+                                WHERE _Match.Like_id = (SELECT _Likes.id FROM [dating_app].[Likes] AS _Likes WHERE _Likes.User_id = '${userId}'
+                                AND _Likes.User2_id = '${user2Id}') 
+                                OR _Match.Like2_id = (SELECT _Likes.id FROM [dating_app].[Likes] AS _Likes WHERE _Likes.User_id = '${userId}' 
+                                AND _Likes.User2_id = '${user2Id}'))
     
                                 DELETE 
                                 FROM [dating_app].[Likes]
-                                WHERE id = (SELECT _Likes.id FROM [dating_app].[Likes] AS _Likes WHERE _Likes.User_id = '${userId}' AND _Likes.User2_id = '${user2Id}')`,function(err){
+                                WHERE id = (SELECT _Likes.id FROM [dating_app].[Likes] AS _Likes WHERE _Likes.User_id = '${userId}' 
+                                AND _Likes.User2_id = '${user2Id}')`,function(err){
         if (err) {
             context.log.error(err);
             context.res.status = 500; 

@@ -1,4 +1,3 @@
-var fs = require('fs');
 let alert = require('alert');
 var functionPost = require('../../Azure functions/FunctionPOST');
 const User = require('../../Model/Users');
@@ -8,16 +7,13 @@ var app = require('../../app')
 
 
 
-//loads the potential new matches (the people you haven't liked or disliked yet)
+//loads the potential new matches (the people you haven't liked or disliked yet and that fit your preffered sex and you fit their preffered sex + that are within your min and max age)
 async function loadUser (req,res,minAge,maxAge){
     
     var email = localStorage.getItem('email');
-    console.log(email)
     var result = await functionPost.loadUsers(email,minAge,maxAge)
-    console.log(result)
 
     var uniqueResult = [...new Set(result)]
-    console.log(uniqueResult)
 
     //Makes sure that if for some reason your last- and firstname are the same, that your last name doesn't get deleted
     if(typeof result !== 'undefined'){
@@ -29,7 +25,6 @@ async function loadUser (req,res,minAge,maxAge){
     
         
 
-    console.log(uniqueResult)
     return uniqueResult
 }
 async function assignValues (req,res,minAge,maxAge){
@@ -55,7 +50,6 @@ async function redirect(req,res,minAge,maxAge){
     var user = await assignValues(req,res,minAge,maxAge);
     global.localStorage.setItem('user2_id',user.id);
     
-   // console.log(user)
     
             if(typeof user.id ==='undefined'){
                 app.getVariables(req,res)

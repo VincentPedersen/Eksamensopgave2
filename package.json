@@ -4,19 +4,21 @@
   "description": "",
   "scripts": {
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "test": "mocha --reporter spec"
   },
   "dependencies": {
     "array-flatten": "^3.0.0",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
+    "chai": "^4.3.4",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.0",
     "finalhandler": "^1.1.2",
     "global": "^4.4.0",
     "https": "^1.0.0",
     "merge-descriptors": "^1.0.1",
+    "mocha": "^8.4.0",
     "nodemailer": "^6.6.0",
     "request": "^2.88.2",
     "tedious": "^11.0.8"

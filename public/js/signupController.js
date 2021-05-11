@@ -1,4 +1,3 @@
-var fs = require('fs');
 var alert = require('alert');
 var User = require('../../Model/Users');
 var functionPost = require('../../Azure functions/FunctionPOST');
@@ -25,6 +24,7 @@ function createNewUser(req,res) {
         var interests2 = interestsArray[1];
         var interests3 = interestsArray[2];
         
+        //validates email
         function ValidateEmail(email)
         {
             var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -53,7 +53,6 @@ function createNewUser(req,res) {
         
             //encrypts the password - would maybe make sense to have as a method in the class but couldn't make it work
             var hash = bcrypt.hashSync(password,saltRounds,function(err,hash){
-                console.log(hash);
             });
             //It adds a number 4 if you haven't chosen prefferedSex 2 or 3. Number 4 is just an empty gender
             if(typeof prefferedSex2 === 'undefined'){
@@ -65,7 +64,6 @@ function createNewUser(req,res) {
             }
             
         
-            console.log(user);
         
         functionPost.signUp(user)
         

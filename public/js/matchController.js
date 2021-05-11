@@ -1,4 +1,3 @@
-var fs = require('fs');
 let alert = require('alert');
 var functionPost = require('../../Azure functions/FunctionPOST');
 var User = require('../../Model/Users');
@@ -8,6 +7,7 @@ const e = require('express');
 
 
 //In general pretty ugly code in this controller, but it does its job
+//the 3 top functions basically just work as redirecters and makes sure to include different counters
 function smtMatch(req,res){
     var counter=0;
     app.getMatches(req,res,counter)
@@ -22,6 +22,8 @@ function smtPreviousMatch(req,res){
     var counter=2;
     app.getMatches(req,res,counter)
 }
+//this function is used when the "my matches" button is clicked on the home page
+//gets a users matches
 async function match (req,res){
 
     var email = localStorage.getItem('email');
@@ -38,7 +40,6 @@ async function match (req,res){
         var ownFirstName = ownUser[2];
         var ownLastName = ownUser[3];
 
-        console.log(result)
 
         const obj = {
             input: result,
@@ -52,13 +53,11 @@ async function match (req,res){
                             .removeItem(ownFirstName)
                             .removeItem(ownLastName);
            
-        console.log(output.input);
 
         global.localStorage.setItem('matches',output.input)
-        console.log(localStorage.getItem('matches'))
         //Gross with global variable...I know, just couldn't think of another way to fix this
         q = 0;
-
+        //shows the first user in the matcharray
         var id = output.input[0]
         var first_name = output.input[1]
         var last_name = output.input[2]
@@ -72,7 +71,6 @@ async function match (req,res){
 
         var matches = localStorage.getItem('matches');
         var matchesArray = matches.split(",")
-        console.log(matchesArray)
 
         if(matchesArray.length>3){
             nextButtonVisibility = true;
@@ -87,10 +85,11 @@ async function match (req,res){
         return user; 
     }
 }
-
+//this is the function that is used when you click the "next" button
 function nextMatch (req,res){
    var matches = localStorage.getItem('matches');
    var matchesArray = matches.split(",")
+   //makes sure that it is the next user in the array that gets picked
    q = q+3
    matchesArray.splice(0,q);
    var id = matchesArray[0];
@@ -98,7 +97,6 @@ function nextMatch (req,res){
    var last_name = matchesArray[2];
 
    var user = new User(id,'','',first_name,last_name,'',)
-    console.log(matchesArray);
 
 
     if(matchesArray.length>3){
@@ -112,10 +110,11 @@ function nextMatch (req,res){
 
 
 }
-
+//this is the function that is used when you click the "previous" button
 function previousMatch (req,res){
     var matches = localStorage.getItem('matches');
     var matchesArray = matches.split(",")
+    //makes sure that it is the previous user in the array that gets picked
     q = q-3
     matchesArray.splice(0,q);
     var id = matchesArray[0];
@@ -123,7 +122,6 @@ function previousMatch (req,res){
     var last_name = matchesArray[2];
  
     var user = new User(id,'','',first_name,last_name,'',)
-     console.log(matchesArray);
  
      
 
@@ -140,7 +138,7 @@ function previousMatch (req,res){
  
  
  }
-
+//Runs an azure function that gets the entire profile of a match
 async function seeFullMatch(req,res){
     var matches = localStorage.getItem('matches');
     var matchesArray = matches.split(",")
@@ -156,7 +154,7 @@ async function seeFullMatch(req,res){
     app.getFullProfileMatch(req,res,email)
     return email
 }
-
+//Deletes a match (and the corresponding like so that you can like the user again - if you so desire)
 async function deleteMatch(req,res){
     var matches = localStorage.getItem('matches');
     var matchesArray = matches.split(",")

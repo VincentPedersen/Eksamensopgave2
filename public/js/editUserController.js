@@ -1,16 +1,13 @@
-var fs = require('fs');
 var alert = require('alert');
-// Have to require the loginController, to find out which user is currently signed in, so you know which user to delete (through the displayname variable)
-const loginController = require('./loginController');
 var app = require('../../app')
 var functionPost = require('../../Azure functions/FunctionPOST');
 const User = require('../../Model/Users');
 const renderUserProfile = require('./renderUserProfileController');
 const { isNull } = require('util');
 
-
+//Function that edits user info of user currently logged in
 //after having edited user, it changes what user info is displayed on the homepage
-//add something so you can't change your info to something that already exists
+//Need to add something so you can't change your info to something that already exists
 
 async function updateUser(req,res){
 
@@ -22,7 +19,6 @@ async function updateUser(req,res){
     }
     var result = await renderUserProfile.renderUserProfile(email);
 
-console.log(result)
     var id = result[0]
     var email = result[1]
     var first_name = result[2];
@@ -157,6 +153,7 @@ console.log(result)
         }
         newEmail = email;
     }
+    //Gets the edited info
     var newfirstName = req.body.newFirst_name;
     var newlastName = req.body.newLast_name; 
     var newAge = req.body.newAge;
@@ -196,7 +193,7 @@ console.log(result)
     } else {
     var newUser = new User('',newEmail,'',newfirstName,newlastName,newAge,newLocation,newGender,newinterests1,newinterests2,newinterests3,newprefferedSex1,newprefferedSex2,newprefferedSex3);
     }
-
+//If a user didn't change info, it needs to just remain as the old info
     if(newUser.email===""){
         newUser.email = oldUser.email;
     } 
@@ -223,7 +220,6 @@ console.log(result)
     }
 
    
-    console.log(newUser)
     functionPost.editUser(newUser,email);
     
     if (localStorage.getItem('email')==='Admin'){
