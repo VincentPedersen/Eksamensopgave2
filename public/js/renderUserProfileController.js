@@ -29,11 +29,11 @@ async function renderUserProfile (email){
             var extraPrefferedSex = result[8];
             uniqueResult.push(extraPrefferedSex);
 
-        }else if(result[6]===result[26]){
-            var extraPrefferedSex = result[26];
+        }else if(result[6]===result[35]){
+            var extraPrefferedSex = result[35];
             uniqueResult.push(extraPrefferedSex); 
-        }else if(result[6]===result[17]){
-            var extraPrefferedSex = result[17];
+        }else if(result[6]===result[62]){
+            var extraPrefferedSex = result[62];
             uniqueResult.push(extraPrefferedSex);
         } 
     //Moves the preffered sexes to the end
@@ -48,6 +48,19 @@ async function renderUserProfile (email){
                 uniqueResult.push(uniqueResult.splice(i,1)[0]);
             }
         }
+
+    //fixes bug where the same preffered sex gets listed twice
+    if (uniqueResult[10]===uniqueResult[11]){
+        uniqueResult[11] = null;
+    }
+    if (uniqueResult[10]===uniqueResult[12]){
+        uniqueResult[12] = null;
+    }
+    if(uniqueResult[11]===uniqueResult[12]){
+        uniqueResult[12] = null;
+    }
+    console.log(result)
+    console.log(uniqueResult)
     
     return uniqueResult;
 }

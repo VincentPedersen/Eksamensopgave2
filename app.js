@@ -199,7 +199,6 @@ const loadUserController = require('./public/js/loadUserController')
 const likeAndDislikeController = require('./public/js/likeAndDislikeController');
 const matchController = require('./public/js/matchController');
 const renderUserProfile = require('./public/js/renderUserProfileController')
-const stayLoggedinController = require('./public/js/stayLoggedinController');
 const adminController = require('./public/js/adminController');
 const { response } = require('express');
 const { unwatchFile } = require('fs');

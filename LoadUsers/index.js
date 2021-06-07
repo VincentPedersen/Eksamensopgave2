@@ -34,20 +34,6 @@ const executeSQL = (context,email,minAge,maxAge) => {
                                 ON _InterestedIn.User_id = _User.id
                                 WHERE _User.email = '${email}'
 
-     
-
-                                DECLARE @smt_id INT
-                                SELECT @smt_id = (SELECT top(1) _User.id FROM [dating_app].[User] AS _User JOIN [dating_app].[Gender] AS _Gender ON _User.Gender_id = _Gender.id
-                                JOIN [dating_app].[Interested_in_gender] AS _InterestedIn
-                                ON _InterestedIn.User_id = _User.id
-                                JOIN [dating_app].[Gender] AS _Gender2
-                                ON _InterestedIn.Gender_id = _Gender2.id
-                                JOIN [dating_app].[User_Interests] AS User_Interest
-                                ON User_Interest.User_id = _User.id
-                                JOIN [dating_app].[Interests] AS _Interests
-                                ON User_Interest.Interests_id = _Interests.id WHERE _User.id IN (SELECT id FROM [dating_app].[User] EXCEPT SELECT User2_id FROM [dating_app].[Likes] WHERE User_id = @user_id EXCEPT SELECT User2_id FROM [dating_app].[Dislikes] WHERE User_id = @user_id)
-                                AND email != '${email}' ORDER BY _User.id ASC)
-
                                 SELECT TOP(3)_User.id,_User.first_name,_User.last_name,_User.age,_User.location,_Gender.name AS Gender, _Interests.name AS Interests
                                 FROM [dating_app].[User] AS _User
                                 JOIN [dating_app].[Gender] AS _Gender
